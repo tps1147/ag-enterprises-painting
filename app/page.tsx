@@ -9,28 +9,28 @@ const services = [
     number: "01",
     symbol: "✦",
     title: "Interior Painting",
-    text: "Rooms, walls, ceilings, trim, kitchens, and bathrooms—finished with clean lines and careful attention to the surfaces underneath.",
+    text: "Walls, ceilings, trim, kitchens, and bathrooms—with the room protected, the surface prepared, and the cut lines kept clean.",
     tone: "paper",
   },
   {
     number: "02",
     symbol: "+",
     title: "Drywall & Sheetrock Repair",
-    text: "Holes, patches, cracks, and damaged areas repaired and prepared before the first finish coat goes on.",
+    text: "Holes, cracks, nail pops, and tired old patches repaired so they can blend back into the wall instead of becoming the main attraction.",
     tone: "mint",
   },
   {
     number: "03",
     symbol: "≈",
     title: "Skim Coating",
-    text: "Uneven, damaged, or wallpaper-scarred walls smoothed into a better foundation for paint.",
+    text: "Rough, uneven, or wallpaper-scarred surfaces smoothed into a clean foundation that fresh paint can actually flatter.",
     tone: "butter",
   },
   {
     number: "04",
     symbol: "↗",
     title: "Wallpaper Removal",
-    text: "The old layer comes down, what is underneath gets assessed, and the wall is prepared for its next finish.",
+    text: "The old paper comes down, the glue and damage underneath get dealt with, and the wall gets a proper reset.",
     tone: "coral",
   },
 ];
@@ -41,9 +41,9 @@ const projects = [
     width: 640,
     height: 853,
     alt: "Freshly painted white exterior porch column beside brickwork",
-    title: "Exterior column refresh",
+    title: "Porch column, cleaned up",
     tag: "Small exterior project",
-    note: "Surface repair, bonding, careful prep, and a crisp white finish for a compact exterior detail.",
+    note: "Surface repair, bonding, careful prep, and a crisp white finish gave this hardworking porch detail a proper comeback.",
     source: "https://www.instagram.com/ag_enterprises_painting/p/DKfNzFmxBMg/",
   },
   {
@@ -51,9 +51,9 @@ const projects = [
     width: 512,
     height: 640,
     alt: "Freshly repainted galley kitchen with gray cabinets and clean white walls",
-    title: "Kitchen reset",
+    title: "A calmer kitchen",
     tag: "Ceilings, walls + baseboard",
-    note: "A straightforward repaint with two coats on the ceilings and walls, plus fresh baseboard paint.",
+    note: "Two coats on the ceilings and walls, fresh baseboard paint, and a galley kitchen that feels lighter and pulled together again.",
     source: "https://www.instagram.com/ag_enterprises_painting/p/DEuoYZFRUpj/",
   },
   {
@@ -61,9 +61,9 @@ const projects = [
     width: 640,
     height: 800,
     alt: "Floor carefully covered and taped before wall and ceiling painting",
-    title: "The prep is the project",
+    title: "Prep before pretty",
     tag: "Patch, sand, prime + paint",
-    note: "Floors protected before ceiling patches, wall touch-ups, sanding, priming, and painting begin.",
+    note: "The floors were protected before the ceiling patches, wall touch-ups, sanding, priming, and painting got underway.",
     source: "https://www.instagram.com/ag_enterprises_painting/p/DH07G6WxyD4/",
   },
   {
@@ -71,44 +71,44 @@ const projects = [
     width: 640,
     height: 800,
     alt: "Fresh two-tone room paint with light lower walls and a gray upper section",
-    title: "Small-room finish",
+    title: "One small room, reset",
     tag: "Interior repaint",
-    note: "A compact room repaint that shows how a clean edge and fresh surface can change the whole feel.",
+    note: "A compact repaint with clean edges and a fresh surface—proof that a small room can make a big comeback.",
     source: "https://www.instagram.com/ag_enterprises_painting/p/DEcwB_Xpvu5/",
   },
 ];
 
 const processSteps = [
-  ["Show the wall", "Send project photos, your town, and a quick note about what is bothering you."],
-  ["Get the plan", "Andrew looks at the surface and talks through the repair, prep, and finish."],
-  ["Repair + paint", "The room gets protected, the wall gets ready, and the finish goes on cleanly."],
-  ["Enjoy the reveal", "Review the fresh finish and cross one more house thing off the list."],
+  ["Send the evidence", "Share one room photo, a close-up, your town, and the short version of what is going on."],
+  ["Talk it through", "I’ll look at the surface and explain what likely needs repair, prep, and paint."],
+  ["Protect, repair, paint", "The room gets covered, the wall gets made right, and the finish goes on carefully."],
+  ["Walk in and smile", "Look over the finished room and enjoy not staring at that one spot anymore."],
 ];
 
 const faqs = [
   [
-    "Do you take small painting and repair jobs?",
-    "Yes. Small drywall patches, ceilings, kitchens, bathrooms, trim, and other focused projects are exactly the kind of work AG Enterprises Painting welcomes.",
+    "Is my job too small?",
+    "Probably not. A drywall patch, one ceiling, a bathroom, kitchen, trim, or one stubborn wall are all worth sending over. Small, focused projects are welcome.",
   ],
   [
-    "Can drywall repair and painting be handled together?",
-    "Yes. Repair, surface preparation, priming, and painting can be planned as one project so the finished area reads as a complete wall—not a patch with paint on it.",
+    "Can you repair the drywall and paint it too?",
+    "Yes. I can plan the repair, surface preparation, priming, and painting together so you are not left coordinating a patch from one person and paint from another.",
   ],
   [
-    "What is skim coating?",
-    "Skim coating adds a thin layer of joint compound to smooth uneven or damaged walls. It can create a better paint-ready surface after old texture, repairs, or wallpaper removal.",
+    "What is skim coating—and might my wall need it?",
+    "Skim coating uses thin layers of joint compound to smooth an uneven or damaged surface. It is often useful after old texture, repeated repairs, or wallpaper removal.",
   ],
   [
-    "Can you remove wallpaper and prepare the wall afterward?",
-    "Yes. Wallpaper removal is followed by an assessment of the wall underneath. Glue residue, damage, and uneven areas can then be addressed before paint.",
+    "Can wallpaper removal and painting be one project?",
+    "Yes. Once the paper comes down, I can assess the wall underneath and deal with leftover glue, damage, or uneven areas before the new finish goes on.",
   ],
   [
-    "What should I include with an estimate request?",
-    "Send a full-room photo, a close-up of the trouble spot, your town, and a sentence about the result you want. That gives Andrew a useful first look at the scope.",
+    "What photos should I send?",
+    "Send one full-room photo, one or two close-ups of the trouble spot, your town, and a sentence about what you want changed. No wall diagnosis required.",
   ],
   [
-    "Do you work outside Cinnaminson?",
-    "AG Enterprises Painting is based in Cinnaminson and works in nearby South Jersey communities. Share your town when you reach out so Andrew can confirm the current service area.",
+    "Do you travel outside Cinnaminson?",
+    "Yes, for projects in nearby South Jersey communities. Include your town when you message me and I’ll let you know whether it is within my current service area.",
   ],
 ];
 
@@ -186,7 +186,7 @@ export default function Home() {
       </div>
 
       <a className="skip-link" href="#main-content">
-        Skip to the good walls
+        Skip to the wall stuff
       </a>
 
       <header className="site-header">
@@ -222,7 +222,7 @@ export default function Home() {
             </div>
 
             <button className="nav-cta" type="button" onClick={openWallNote} onPointerEnter={replayRoller}>
-              Get an estimate <span aria-hidden="true">↗</span>
+              Send me a photo <span aria-hidden="true">↗</span>
             </button>
           </nav>
         </div>
@@ -231,35 +231,35 @@ export default function Home() {
       <main id="main-content">
         <section className="hero shell" id="top" aria-labelledby="hero-heading">
           <div className="hero-copy">
-            <p className="eyebrow">Cinnaminson interior painting + wall repair</p>
+            <p className="eyebrow">Interior painting + wall repair · Cinnaminson, NJ</p>
             <h1 id="hero-heading">
-              Small repairs.
+              That wall has a story.
               <br />
-              Serious prep.
+              Let&apos;s give it
               <br />
-              <span className="paint-line">Big fresh-room energy.</span>
+              <span className="paint-line">a better ending.</span>
             </h1>
             <p className="hero-subhead">
-              Interior painting, drywall and Sheetrock repair, skim coating, and wallpaper removal for homes in Cinnaminson and nearby South Jersey—handled with care, clean lines, and a little good humor.
+              Hey, I&apos;m Andrew. I paint rooms, repair drywall, skim rough walls, and remove wallpaper around Cinnaminson and nearby South Jersey. Small job or strange wall, send me a photo and I&apos;ll tell you the sensible next step.
             </p>
 
             <div className="hero-actions" role="group" aria-label="Estimate options">
               <button className="button button-primary" type="button" onClick={openWallNote} onPointerEnter={replayRoller}>
-                Show us the wall <span aria-hidden="true">↗</span>
+                Show me the wall <span aria-hidden="true">↗</span>
               </button>
               <a className="button button-secondary" href={instagramUrl} target="_blank" rel="noreferrer">
-                Send project photos <span aria-hidden="true">→</span>
+                See my recent work <span aria-hidden="true">→</span>
               </a>
             </div>
 
             <ul className="proof-row" aria-label="Why call AG Enterprises Painting">
-              <li>Small projects welcome</li>
-              <li>Prep + paint together</li>
-              <li>Talk directly with Andrew</li>
+              <li>Small jobs are welcome</li>
+              <li>Repair + paint in one plan</li>
+              <li>You talk directly with me</li>
             </ul>
 
             <p className="hero-note" aria-hidden="true">
-              <strong>↳</strong> Prep first. Paint second. Victory lap third.
+              <strong>↳</strong> Good work. Good mood. No mystery.
             </p>
           </div>
 
@@ -287,18 +287,18 @@ export default function Home() {
               />
             </figure>
 
-            <p className="photo-caption">real work<br />right nearby</p>
+            <p className="photo-caption">real jobs<br />real local walls</p>
 
-            <div className="quality-seal" role="img" aria-label="Prep first, paint second">
+            <div className="quality-seal" role="img" aria-label="Fix it right, paint it nice">
               <div className="quality-seal-ring" aria-hidden="true">
-                <span>Prep first · paint second</span>
+                <span>Fix it right · paint it nice</span>
                 <span>Good work · good mood</span>
               </div>
-              <span className="quality-seal-core">OH,<br />NICE.</span>
+              <span className="quality-seal-core">MUCH<br />BETTER.</span>
             </div>
 
             <div className="roller-hello" ref={rollerRef} aria-hidden="true">
-              <span className="roller-bubble">Good walls. Good mood.</span>
+              <span className="roller-bubble">Let&apos;s get it sorted.</span>
               <div className="roller-tool">
                 <span className="roller-head" />
                 <span className="roller-arm" />
@@ -310,7 +310,7 @@ export default function Home() {
 
         <div className="service-ticker" role="group" aria-label="AG Enterprises Painting services">
           <div className="ticker-track">
-            <span>Small jobs welcome</span>
+            <span>Small jobs absolutely welcome</span>
             <span>Interior painting</span>
             <span>Drywall repair</span>
             <span>Skim coating</span>
@@ -323,11 +323,11 @@ export default function Home() {
           <div className="shell">
             <div className="section-head light-head" data-reveal>
               <div>
-                <p className="section-kicker">Repair + prep + paint</p>
-                <h2 id="services-heading">One call for the repair and the finish.</h2>
+                <p className="section-kicker">What I handle</p>
+                <h2 id="services-heading">Fix the wall. Then make the room feel good again.</h2>
               </div>
               <p>
-                From “tiny mystery dent” to “why did anyone choose that wallpaper?”—the wall gets a sensible plan before the paint can opens.
+                Sometimes the job is a new color. Sometimes the wall needs a little therapy first. I handle the patching, smoothing, prep, and paint so you are not coordinating two different people.
               </p>
             </div>
 
@@ -343,8 +343,8 @@ export default function Home() {
             </div>
 
             <div className="inline-cta" data-reveal>
-              <p><strong>Not sure what the wall needs?</strong> A couple of photos can make the first conversation much easier.</p>
-              <button className="text-button" type="button" onClick={openWallNote}>Send a photo <span aria-hidden="true">↗</span></button>
+              <p><strong>Patch, skim coat, or paint?</strong> You do not need to figure that out before you reach out.</p>
+              <button className="text-button" type="button" onClick={openWallNote}>Ask Andrew <span aria-hidden="true">↗</span></button>
             </div>
           </div>
         </section>
@@ -352,10 +352,10 @@ export default function Home() {
         <section className="projects-section shell" id="work" aria-labelledby="work-heading">
           <div className="section-head" data-reveal>
             <div>
-              <p className="section-kicker">Recent local work</p>
-              <h2 id="work-heading">Proof, not paint poetry.</h2>
+              <p className="section-kicker">The honest camera roll</p>
+              <h2 id="work-heading">Real walls. Careful work. No stock photos.</h2>
             </div>
-            <p>Real work from the AG Enterprises Painting feed. Tap a project to see what was handled.</p>
+            <p>These are actual AG Enterprises Painting jobs around South Jersey. Open one to see what I repaired, prepared, or painted.</p>
           </div>
 
           <div className="project-grid">
@@ -374,7 +374,7 @@ export default function Home() {
                     <span className="project-image">
                       <img src={project.image} alt={project.alt} width={project.width} height={project.height} loading="lazy" />
                       <span className="project-note" id={`project-note-${index}`} aria-hidden={!isOpen}>
-                        <small>What we handled</small>
+                        <small>What I handled</small>
                         {project.note}
                       </span>
                     </span>
@@ -403,19 +403,19 @@ export default function Home() {
                 height="800"
                 loading="lazy"
               />
-              <span className="prep-sticker">The finish starts here.</span>
+              <span className="prep-sticker">This is where the good finish begins.</span>
             </div>
 
             <div className="prep-copy" data-reveal>
-              <p className="section-kicker">The prep difference</p>
-              <h2 id="prep-heading">The finish starts before the paint can opens.</h2>
+              <p className="section-kicker">Where good work starts</p>
+              <h2 id="prep-heading">Paint is the last step, not the magic trick.</h2>
               <p className="large-copy">
-                A fresh color cannot hide a surface that was never made ready. AG Enterprises Painting looks at the wall first, handles the repair, and paints when the foundation is right.
+                If the wall is cracked, lumpy, or still wearing yesterday’s wallpaper glue, a fresh color will not fix it. I protect the room and get the surface right first, so the finished job looks good for the right reason.
               </p>
               <ol className="prep-list">
-                <li><span>01</span><div><strong>Look closely</strong><p>Find the cracks, bumps, nail pops, old glue, and trouble spots.</p></div></li>
-                <li><span>02</span><div><strong>Patch + smooth</strong><p>Repair what needs attention and build a paint-ready surface.</p></div></li>
-                <li><span>03</span><div><strong>Finish cleanly</strong><p>Prime where needed, paint carefully, and keep the edges crisp.</p></div></li>
+                <li><span>01</span><div><strong>Protect first</strong><p>Cover floors, furniture, and nearby surfaces before the dusty work begins.</p></div></li>
+                <li><span>02</span><div><strong>Make the wall right</strong><p>Repair cracks, holes, nail pops, rough patches, and old adhesive as needed.</p></div></li>
+                <li><span>03</span><div><strong>Paint the room—not the floor</strong><p>Prime where needed, paint evenly, keep the edges crisp, and look it all over.</p></div></li>
               </ol>
             </div>
           </div>
@@ -425,33 +425,33 @@ export default function Home() {
           <div className="owner-card" data-reveal>
             <div className="owner-badge" aria-hidden="true">
               <span>AG</span>
-              <small>Neighbor-run</small>
+              <small>Andrew at AG</small>
             </div>
             <div className="owner-copy">
-              <p className="section-kicker">One project. One point of contact.</p>
-              <h2 id="owner-heading">Talk directly with Andrew.</h2>
+              <p className="section-kicker">The person behind the paint</p>
+              <h2 id="owner-heading">Hi, I&apos;m Andrew. I take the work seriously—myself, less so.</h2>
               <p>
-                AG Enterprises Painting is a neighbor-run business based in Cinnaminson. Andrew brings an upbeat, straightforward approach: look at the wall, explain the plan, and take the prep seriously.
+                At AG Enterprises Painting, I take on the focused jobs that can make a whole home feel better: the drywall patch you keep noticing, the rough wall, the tired ceiling, or the room that just needs a reset.
               </p>
               <p>
-                The small drywall patch, kitchen, bathroom, ceiling, or trim job that feels too focused for a big crew? Those are welcome here.
+                When you reach out, you get me. I’ll look at the project, explain what I think it needs, and give the prep the same attention as the paint. I like clean work, straight answers, and keeping the day in a good mood.
               </p>
               <div className="owner-actions">
-                <button className="button button-primary" type="button" onClick={openWallNote}>Show Andrew the project ↗</button>
+                <button className="button button-primary" type="button" onClick={openWallNote}>Show me the project ↗</button>
                 <a className="instagram-link" href={instagramUrl} target="_blank" rel="noreferrer">@ag_enterprises_painting</a>
               </div>
             </div>
-            <p className="owner-side-note" aria-hidden="true">Small jobs welcome.<br />Weird walls encouraged.</p>
+            <p className="owner-side-note" aria-hidden="true">Small jobs.<br />Straight answers.<br />Good energy.</p>
           </div>
         </section>
 
         <section className="process-section" id="process" aria-labelledby="process-heading">
           <div className="shell process-layout">
             <div className="process-intro" data-reveal>
-              <p className="section-kicker">How it goes</p>
+              <p className="section-kicker">No mystery process</p>
               <h2 id="process-heading">From “uh-oh” to “oh, nice.”</h2>
-              <p>No maze of departments. Just a clear sequence from the first photos to the fresh finish.</p>
-              <button className="text-button" type="button" onClick={openWallNote}>Start with a photo ↗</button>
+              <p>You send the wall. I take a look. Then we make a sensible plan for getting it from “uh-oh” to “oh, nice.”</p>
+              <button className="text-button" type="button" onClick={openWallNote}>Send me the wall ↗</button>
             </div>
 
             <div className="process-track" style={{ "--active-step": activeStep } as CSSProperties}>
@@ -476,23 +476,23 @@ export default function Home() {
         <section className="area-section shell" aria-labelledby="area-heading">
           <div className="area-card" data-reveal>
             <div>
-              <p className="section-kicker">Based right here</p>
-              <h2 id="area-heading">Painting and wall repair in Cinnaminson and nearby South Jersey.</h2>
+              <p className="section-kicker">Cinnaminson home base</p>
+              <h2 id="area-heading">Based in Cinnaminson. Working nearby in South Jersey.</h2>
             </div>
             <div>
               <p>
-                AG Enterprises Painting is based in Cinnaminson, New Jersey, and works with homeowners in nearby South Jersey communities. Tell Andrew where the project is when you reach out, and he can confirm whether it is within the current service area.
+                I’m based in Cinnaminson and take projects in nearby South Jersey communities. Include your town with your photos and I’ll let you know whether it is within my current service area.
               </p>
-              <button className="text-button" type="button" onClick={openWallNote}>Tell us your town ↗</button>
+              <button className="text-button" type="button" onClick={openWallNote}>Send your town ↗</button>
             </div>
           </div>
         </section>
 
         <section className="faq-section shell" id="faq" aria-labelledby="faq-heading">
           <div className="faq-intro" data-reveal>
-            <p className="section-kicker">Before the drop cloths come out</p>
-            <h2 id="faq-heading">A few good wall questions.</h2>
-            <p>If yours is not here, send Andrew a photo and the short version.</p>
+            <p className="section-kicker">Questions people actually ask</p>
+            <h2 id="faq-heading">The useful stuff, before the drop cloths.</h2>
+            <p>If yours is not here, send me a photo and the short version.</p>
           </div>
           <div className="faq-list" data-reveal>
             {faqs.map(([question, answer]) => (
@@ -507,13 +507,13 @@ export default function Home() {
         <section className="closing-section shell" id="contact" aria-labelledby="contact-heading">
           <div className="closing-card" data-reveal>
             <div className="closing-copy">
-              <p className="section-kicker">The wall confessional</p>
-              <h2 id="contact-heading">Tell us what the wall did.</h2>
-              <p>A few details and photos help Andrew understand whether the job needs a patch, a skim, paint, or a respectful combination of all three.</p>
+              <p className="section-kicker">Start with a few photos</p>
+              <h2 id="contact-heading">Show me what&apos;s bugging you.</h2>
+              <p>Send one wide shot, one close-up, your town, and the honest version: “This corner is driving me nuts.” That is plenty to start.</p>
             </div>
             <div className="closing-actions">
-              <button className="button button-sun" type="button" onClick={openWallNote}>Show us the wall ↗</button>
-              <a className="button button-dark-outline" href={instagramUrl} target="_blank" rel="noreferrer">See more local work →</a>
+              <button className="button button-sun" type="button" onClick={openWallNote}>Start with a few photos ↗</button>
+              <a className="button button-dark-outline" href={instagramUrl} target="_blank" rel="noreferrer">See more of my work →</a>
             </div>
             <div className="closing-roller" aria-hidden="true"><span /><i /></div>
           </div>
@@ -530,8 +530,8 @@ export default function Home() {
       </footer>
 
       <nav className="mobile-action-bar" aria-label="Quick estimate actions">
-        <button type="button" onClick={openWallNote}>Show us the wall</button>
-        <a href={instagramUrl} target="_blank" rel="noreferrer">Send photos</a>
+        <button type="button" onClick={openWallNote}>Show me the wall</button>
+        <a href={instagramUrl} target="_blank" rel="noreferrer">See my work</a>
       </nav>
 
       <dialog
@@ -543,17 +543,17 @@ export default function Home() {
         }}
       >
         <div className="dialog-card">
-          <button className="dialog-close" type="button" aria-label="Close estimate guide" onClick={() => dialogRef.current?.close()}>×</button>
-          <p className="section-kicker">The wall confessional</p>
-          <h2 id="wall-dialog-title">Give Andrew the useful version.</h2>
-          <p className="dialog-lede">Instagram is the verified contact channel currently connected to this site. A useful first message includes:</p>
+          <button className="dialog-close" type="button" aria-label="Close photo guide" onClick={() => dialogRef.current?.close()}>×</button>
+          <p className="section-kicker">A useful first message</p>
+          <h2 id="wall-dialog-title">Give me the quick version.</h2>
+          <p className="dialog-lede">You do not need to diagnose the wall. The easiest way to start is with a message on Instagram that includes:</p>
           <ol className="photo-checklist">
-            <li><span>1</span><div><strong>One full-room photo</strong><p>Enough context to understand where the trouble spot lives.</p></div></li>
-            <li><span>2</span><div><strong>One or two close-ups</strong><p>Show the crack, patch, texture, wallpaper, or edge clearly.</p></div></li>
-            <li><span>3</span><div><strong>Your town + the goal</strong><p>Say where the project is and what you want the room to feel like afterward.</p></div></li>
+            <li><span>1</span><div><strong>The whole area</strong><p>Stand back far enough to show the room and where the problem lives.</p></div></li>
+            <li><span>2</span><div><strong>The trouble up close</strong><p>Show the crack, hole, texture, wallpaper, patch, or damaged edge clearly.</p></div></li>
+            <li><span>3</span><div><strong>Your town + the goal</strong><p>Say where you are and what you would like repaired, removed, or refreshed.</p></div></li>
           </ol>
-          <a className="button button-primary dialog-action" href={instagramUrl} target="_blank" rel="noreferrer">Open Instagram and send photos ↗</a>
-          <small>No form submission is simulated here—your message goes through the company’s real Instagram profile.</small>
+          <a className="button button-primary dialog-action" href={instagramUrl} target="_blank" rel="noreferrer">Message me on Instagram ↗</a>
+          <small>This opens the real @ag_enterprises_painting profile in a new tab.</small>
         </div>
       </dialog>
     </div>

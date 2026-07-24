@@ -30,12 +30,12 @@ test("server-renders the AG Enterprises Painting landing page", async () => {
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang=["']en["']/i);
-  assert.ok(html.includes("<title>Cinnaminson Interior Painting &amp; Drywall Repair | AG Enterprises</title>"));
-  assert.ok(html.includes("AG Enterprises Painting handles interior painting, drywall repair, skim coating, and wallpaper removal"));
-  assert.ok(html.includes("Small repairs."));
-  assert.ok(html.includes("Big fresh-room energy."));
+  assert.ok(html.includes("<title>Interior Painting &amp; Drywall Repair in Cinnaminson | AG Enterprises</title>"));
+  assert.ok(html.includes("Interior painting, drywall repair, skim coating, and wallpaper removal in Cinnaminson"));
+  assert.ok(html.includes("That wall has a story."));
+  assert.ok(html.includes("a better ending."));
   assert.ok(html.includes("https://www.instagram.com/ag_enterprises_painting/"));
-  assert.ok(html.includes("og.png"));
+  assert.ok(html.includes("og-v2.png"));
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton|Starter Project/i);
 });
 
@@ -52,13 +52,13 @@ test("keeps production assets, palette, motion, and contact path intact", async 
     "public/work/kitchen-reset.jpg",
     "public/work/careful-prep.jpg",
     "public/work/room-finish.jpg",
-    "public/og.png",
+    "public/og-v2.png",
   ].map((path) => access(new URL("../" + path, import.meta.url))));
 
   assert.ok(page.includes('aria-labelledby="hero-heading"'));
   assert.ok(page.includes("prefers-reduced-motion: reduce"));
   assert.ok(page.includes("project-note-"));
-  assert.ok(page.includes("Instagram is the verified contact channel"));
+  assert.ok(page.includes("You do not need to diagnose the wall"));
   assert.doesNotMatch(page, /tel:|mailto:|five-star|licensed|insured/i);
 
   assert.ok(css.includes("--cream: #fff5e5"));
@@ -68,7 +68,7 @@ test("keeps production assets, palette, motion, and contact path intact", async 
   assert.ok(css.includes("prefers-reduced-motion: reduce"));
   assert.ok(css.includes("animation-timeline: scroll"));
 
-  assert.ok(layout.includes("Cinnaminson Interior Painting & Drywall Repair"));
+  assert.ok(layout.includes("Interior Painting & Drywall Repair in Cinnaminson"));
   assert.ok(layout.includes("max-image-preview"));
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));

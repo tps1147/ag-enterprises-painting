@@ -3,9 +3,9 @@ import { headers } from "next/headers";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const pageTitle = "Cinnaminson Interior Painting & Drywall Repair | AG Enterprises";
+const pageTitle = "Interior Painting & Drywall Repair in Cinnaminson | AG Enterprises";
 const pageDescription =
-  "AG Enterprises Painting handles interior painting, drywall repair, skim coating, and wallpaper removal in Cinnaminson and nearby South Jersey. Small jobs welcome.";
+  "Interior painting, drywall repair, skim coating, and wallpaper removal in Cinnaminson and nearby South Jersey. Small jobs welcome—send Andrew a few photos.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -14,21 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
   const rawProtocol = requestHeaders.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
   const protocol = rawProtocol.split(",")[0].trim();
   const metadataBase = new URL(protocol + "://" + host);
-  const socialImage = new URL("/og.png", metadataBase).toString();
+  const socialImage = new URL("/og-v2.png", metadataBase).toString();
 
   return {
     metadataBase,
     title: pageTitle,
     description: pageDescription,
     applicationName: "AG Enterprises Painting",
-    keywords: [
-      "interior painter Cinnaminson NJ",
-      "drywall repair Cinnaminson",
-      "Sheetrock repair South Jersey",
-      "skim coating Cinnaminson",
-      "wallpaper removal South Jersey",
-      "small painting jobs Cinnaminson",
-    ],
     icons: {
       icon: [{ url: "/favicon.png", type: "image/png" }],
       shortcut: "/favicon.png",
@@ -49,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: socialImage,
           width: 1200,
           height: 630,
-          alt: "AG Enterprises Painting — small repairs, serious prep, and fresh-room energy",
+          alt: "AG Enterprises Painting — that wall has a story, so let’s give it a better ending",
         },
       ],
     },
