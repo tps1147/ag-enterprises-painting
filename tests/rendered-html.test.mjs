@@ -50,6 +50,9 @@ test("keeps production assets, palette, motion, and contact path intact", async 
   await Promise.all([
     "public/work/exterior-column.jpg",
     "public/work/kitchen-reset.jpg",
+    "public/work/kitchen-reset-v3.webp",
+    "public/work/blue-wall-finish.webp",
+    "public/work/clubhouse-walls-v2.webp",
     "public/work/careful-prep.jpg",
     "public/work/room-finish.jpg",
     "public/og-v2.png",

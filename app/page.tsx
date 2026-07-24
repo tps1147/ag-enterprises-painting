@@ -47,14 +47,34 @@ const projects = [
     source: "https://www.instagram.com/ag_enterprises_painting/p/DKfNzFmxBMg/",
   },
   {
-    image: "/work/kitchen-reset.jpg",
-    width: 512,
-    height: 640,
+    image: "/work/kitchen-reset-v3.webp",
+    width: 1536,
+    height: 1920,
     alt: "Freshly repainted galley kitchen with gray cabinets and clean white walls",
     title: "A calmer kitchen",
     tag: "Ceilings, walls + baseboard",
     note: "Two coats on the ceilings and walls, fresh baseboard paint, and a galley kitchen that feels lighter and pulled together again.",
     source: "https://www.instagram.com/ag_enterprises_painting/p/DEuoYZFRUpj/",
+  },
+  {
+    image: "/work/blue-wall-finish.webp",
+    width: 1536,
+    height: 1920,
+    alt: "Deep navy kitchen wall above crisp white wainscoting and window trim",
+    title: "Blue wall, big personality",
+    tag: "Skim coat + bold color",
+    note: "The rough stage came first: skim coating, sanding, and prep. Then the deep navy went on and the white trim got its crisp little victory lap.",
+    source: "https://www.instagram.com/ag_enterprises_painting/p/DDaUa7fSbkk/",
+  },
+  {
+    image: "/work/room-finish.jpg",
+    width: 640,
+    height: 800,
+    alt: "Fresh two-tone room paint with light lower walls and a gray upper section",
+    title: "One small room, reset",
+    tag: "Interior repaint",
+    note: "A compact repaint with clean edges and a fresh surface—proof that a small room can make a big comeback.",
+    source: "https://www.instagram.com/ag_enterprises_painting/p/DEcwB_Xpvu5/",
   },
   {
     image: "/work/careful-prep.jpg",
@@ -67,14 +87,14 @@ const projects = [
     source: "https://www.instagram.com/ag_enterprises_painting/p/DH07G6WxyD4/",
   },
   {
-    image: "/work/room-finish.jpg",
-    width: 640,
-    height: 800,
-    alt: "Fresh two-tone room paint with light lower walls and a gray upper section",
-    title: "One small room, reset",
-    tag: "Interior repaint",
-    note: "A compact repaint with clean edges and a fresh surface—proof that a small room can make a big comeback.",
-    source: "https://www.instagram.com/ag_enterprises_painting/p/DEcwB_Xpvu5/",
+    image: "/work/clubhouse-walls-v2.webp",
+    width: 1440,
+    height: 1800,
+    alt: "Fresh light walls with dark window trim and a built-in counter",
+    title: "Light walls, sharp edges",
+    tag: "Walls + dark trim",
+    note: "Fresh light walls, dark window trim, and a clean line around the built-in counter gave this hardworking room a simple, pulled-together reset.",
+    source: "https://www.instagram.com/ag_enterprises_painting/p/DEL_0jHNVEE/",
   },
 ];
 
@@ -280,10 +300,10 @@ export default function Home() {
 
             <figure className="hero-photo hero-photo-small">
               <img
-                src="/work/kitchen-reset.jpg"
+                src="/work/kitchen-reset-v3.webp"
                 alt="Freshly repainted galley kitchen with gray cabinets"
-                width="640"
-                height="800"
+                width="1536"
+                height="1920"
               />
             </figure>
 

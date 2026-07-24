@@ -978,11 +978,14 @@ section {
 }
 
 .project-1,
-.project-4 { grid-column: span 7; }
+.project-4,
+.project-5 { grid-column: span 7; }
 .project-2,
-.project-3 { grid-column: span 5; }
+.project-3,
+.project-6 { grid-column: span 5; }
 .project-2 { padding-top: 72px; }
 .project-4 { padding-top: 28px; }
+.project-6 { padding-top: 72px; }
 
 .project-card {
   position: relative;
@@ -1001,6 +1004,8 @@ section {
 .project-2 .project-card { --project-tilt: 1.2deg; }
 .project-3 .project-card { --project-tilt: -1.4deg; }
 .project-4 .project-card { --project-tilt: 0.7deg; }
+.project-5 .project-card { --project-tilt: -1.1deg; }
+.project-6 .project-card { --project-tilt: 1deg; }
 
 .project-card:hover,
 .project-card:focus-visible {
@@ -1019,7 +1024,8 @@ section {
 }
 
 .project-2 .project-image,
-.project-3 .project-image {
+.project-3 .project-image,
+.project-6 .project-image {
   height: clamp(290px, 34vw, 410px);
 }
 
@@ -1957,14 +1963,17 @@ section {
   .project-1,
   .project-2,
   .project-3,
-  .project-4 {
+  .project-4,
+  .project-5,
+  .project-6 {
     grid-column: span 6;
     padding-top: 0;
   }
 
   .project-image,
   .project-2 .project-image,
-  .project-3 .project-image {
+  .project-3 .project-image,
+  .project-6 .project-image {
     height: 390px;
   }
 
@@ -2155,13 +2164,16 @@ section {
   .project-1,
   .project-2,
   .project-3,
-  .project-4 {
+  .project-4,
+  .project-5,
+  .project-6 {
     grid-column: 1;
   }
 
   .project-image,
   .project-2 .project-image,
-  .project-3 .project-image {
+  .project-3 .project-image,
+  .project-6 .project-image {
     height: 420px;
   }
 
