@@ -146,24 +146,38 @@ export default function Home() {
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
     const stepItems = Array.from(document.querySelectorAll<HTMLElement>("[data-process-step]"));
 
-    if (reducedMotion) {
+    let revealObserver: IntersectionObserver | null = null;
+    let processResizeObserver: ResizeObserver | null = null;
+
+    const showAllRevealItems = () => {
       revealItems.forEach((item) => item.classList.add("is-visible"));
-      return;
+      document.documentElement.classList.remove("motion-ready");
+    };
+
+    if (reducedMotion || typeof window.IntersectionObserver !== "function") {
+      showAllRevealItems();
+    } else {
+      try {
+        revealObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                revealObserver?.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -10%", threshold: 0.12 },
+        );
+
+        document.documentElement.classList.add("motion-ready");
+        revealItems.forEach((item) => revealObserver?.observe(item));
+      } catch {
+        revealObserver?.disconnect();
+        revealObserver = null;
+        showAllRevealItems();
+      }
     }
-
-    document.documentElement.classList.add("motion-ready");
-
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -10%", threshold: 0.12 },
-    );
 
     let processFrame = 0;
 
@@ -195,17 +209,22 @@ export default function Home() {
       if (!processFrame) processFrame = window.requestAnimationFrame(updateProcess);
     };
 
-    const processResizeObserver = new ResizeObserver(queueProcessUpdate);
-
-    revealItems.forEach((item) => revealObserver.observe(item));
-    stepItems.forEach((item) => processResizeObserver.observe(item));
+    if (typeof window.ResizeObserver === "function") {
+      try {
+        processResizeObserver = new ResizeObserver(queueProcessUpdate);
+        stepItems.forEach((item) => processResizeObserver?.observe(item));
+      } catch {
+        processResizeObserver?.disconnect();
+        processResizeObserver = null;
+      }
+    }
     window.addEventListener("scroll", queueProcessUpdate, { passive: true });
     window.addEventListener("resize", queueProcessUpdate);
     queueProcessUpdate();
 
     return () => {
-      revealObserver.disconnect();
-      processResizeObserver.disconnect();
+      revealObserver?.disconnect();
+      processResizeObserver?.disconnect();
       window.removeEventListener("scroll", queueProcessUpdate);
       window.removeEventListener("resize", queueProcessUpdate);
       if (processFrame) window.cancelAnimationFrame(processFrame);
@@ -245,13 +264,23 @@ export default function Home() {
     const hero = document.querySelector<HTMLElement>(".hero");
     if (!hero) return;
 
-    const heroObserver = new IntersectionObserver(
-      ([entry]) => setMobileActionsVisible(!entry.isIntersecting),
-      { threshold: 0.08 },
-    );
+    if (typeof window.IntersectionObserver !== "function") {
+      setMobileActionsVisible(true);
+      return;
+    }
 
-    heroObserver.observe(hero);
-    return () => heroObserver.disconnect();
+    let heroObserver: IntersectionObserver | null = null;
+    try {
+      heroObserver = new IntersectionObserver(
+        ([entry]) => setMobileActionsVisible(!entry.isIntersecting),
+        { threshold: 0.08 },
+      );
+      heroObserver.observe(hero);
+    } catch {
+      setMobileActionsVisible(true);
+    }
+
+    return () => heroObserver?.disconnect();
   }, []);
 
   const replayRoller = () => {
@@ -536,7 +565,7 @@ export default function Home() {
 
         <section className="process-section" id="process" aria-labelledby="process-heading">
           <div className="shell process-layout">
-            <div className="process-intro" data-reveal>
+            <div className="process-intro">
               <p className="section-kicker">No mystery process</p>
               <h2 id="process-heading">From “uh-oh” to “oh, nice.”</h2>
               <p>You send the wall. I take a look. Then we make a sensible plan for getting it from “uh-oh” to “oh, nice.”</p>

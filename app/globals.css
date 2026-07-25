@@ -1454,12 +1454,11 @@ h1 {
   min-height: 190px;
   padding: 13px 0 44px;
   border-bottom: 1px solid rgba(255, 245, 229, 0.2);
-  opacity: 0.74;
-  transition: opacity 280ms ease, transform 280ms ease;
+  opacity: 1;
+  transition: transform 280ms ease;
 }
 
 .process-step.is-active {
-  opacity: 1;
   transform: translateX(6px);
 }
 
@@ -1840,6 +1839,16 @@ h1 {
 .motion-ready [data-reveal].is-visible {
   opacity: 1;
   translate: 0 0;
+}
+
+/* The process is useful content, so motion may emphasize it but never hide it. */
+.motion-ready .process-section .process-intro,
+.motion-ready .process-section .process-step,
+.motion-ready .process-section .process-step[data-reveal],
+.motion-ready .process-section .process-step[data-reveal].is-visible {
+  opacity: 1;
+  translate: none;
+  visibility: visible;
 }
 
 @media (max-width: 1050px) {

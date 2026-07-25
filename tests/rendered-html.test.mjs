@@ -127,7 +127,9 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
   assert.ok(page.includes("You do not need to diagnose the wall"));
   assert.ok(page.includes("--roller-offset"));
   assert.ok(page.includes("ResizeObserver"));
+  assert.ok(page.includes('typeof window.IntersectionObserver !== "function"'));
   assert.doesNotMatch(page, /data-process-step={index} data-reveal/);
+  assert.doesNotMatch(page, /className="process-intro" data-reveal/);
   assert.doesNotMatch(page, /tel:|mailto:|five-star|licensed|insured/i);
 
   assert.ok(css.includes("--cream: #fff5e5"));
@@ -137,6 +139,8 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
   assert.ok(css.includes("prefers-reduced-motion: reduce"));
   assert.ok(css.includes("@supports (animation-timeline: scroll())"));
   assert.ok(css.includes("translate: 0 24px"));
+  assert.ok(css.includes(".motion-ready .process-section .process-step"));
+  assert.match(css, /\.process-step\s*\{[\s\S]*?opacity:\s*1;/);
   assert.ok(css.includes("safe-area-inset-bottom"));
 
   assert.ok(layout.includes("HousePainter"));
