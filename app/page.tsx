@@ -136,6 +136,8 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [rollerOffset, setRollerOffset] = useState(3);
+  const [mobileActionsVisible, setMobileActionsVisible] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const rollerRef = useRef<HTMLDivElement>(null);
 
@@ -163,26 +165,93 @@ export default function Home() {
       { rootMargin: "0px 0px -10%", threshold: 0.12 },
     );
 
-    const stepObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const nextStep = Number((entry.target as HTMLElement).dataset.processStep || 0);
-            setActiveStep(nextStep);
-          }
-        });
-      },
-      { rootMargin: "-35% 0px -45%", threshold: 0 },
-    );
+    let processFrame = 0;
+
+    const updateProcess = () => {
+      processFrame = 0;
+      if (!stepItems.length) return;
+
+      const readingLine = Math.min(window.innerHeight * 0.48, 520);
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      stepItems.forEach((item, index) => {
+        const rect = item.getBoundingClientRect();
+        const marker = rect.top + Math.min(rect.height * 0.34, 64);
+        const distance = Math.abs(marker - readingLine);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      const nextOffset = Math.round(stepItems[closestIndex].offsetTop + 3);
+      setActiveStep((current) => current === closestIndex ? current : closestIndex);
+      setRollerOffset((current) => current === nextOffset ? current : nextOffset);
+    };
+
+    const queueProcessUpdate = () => {
+      if (!processFrame) processFrame = window.requestAnimationFrame(updateProcess);
+    };
+
+    const processResizeObserver = new ResizeObserver(queueProcessUpdate);
 
     revealItems.forEach((item) => revealObserver.observe(item));
-    stepItems.forEach((item) => stepObserver.observe(item));
+    stepItems.forEach((item) => processResizeObserver.observe(item));
+    window.addEventListener("scroll", queueProcessUpdate, { passive: true });
+    window.addEventListener("resize", queueProcessUpdate);
+    queueProcessUpdate();
 
     return () => {
       revealObserver.disconnect();
-      stepObserver.disconnect();
+      processResizeObserver.disconnect();
+      window.removeEventListener("scroll", queueProcessUpdate);
+      window.removeEventListener("resize", queueProcessUpdate);
+      if (processFrame) window.cancelAnimationFrame(processFrame);
       document.documentElement.classList.remove("motion-ready");
     };
+  }, []);
+
+  useEffect(() => {
+    const closeMenuOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    const closeMenuAboveBreakpoint = () => {
+      if (window.innerWidth > 900) setMenuOpen(false);
+    };
+    const alignHashTarget = () => {
+      const targetId = decodeURIComponent(window.location.hash.slice(1));
+      if (!targetId) return;
+      document.getElementById(targetId)?.scrollIntoView({ block: "start", behavior: "auto" });
+    };
+    const initialHashTimer = window.setTimeout(alignHashTarget, 180);
+
+    window.addEventListener("keydown", closeMenuOnEscape);
+    window.addEventListener("resize", closeMenuAboveBreakpoint);
+    window.addEventListener("hashchange", alignHashTarget);
+    window.addEventListener("load", alignHashTarget);
+
+    return () => {
+      window.clearTimeout(initialHashTimer);
+      window.removeEventListener("keydown", closeMenuOnEscape);
+      window.removeEventListener("resize", closeMenuAboveBreakpoint);
+      window.removeEventListener("hashchange", alignHashTarget);
+      window.removeEventListener("load", alignHashTarget);
+    };
+  }, []);
+
+  useEffect(() => {
+    const hero = document.querySelector<HTMLElement>(".hero");
+    if (!hero) return;
+
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => setMobileActionsVisible(!entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+
+    heroObserver.observe(hero);
+    return () => heroObserver.disconnect();
   }, []);
 
   const replayRoller = () => {
@@ -474,7 +543,7 @@ export default function Home() {
               <button className="text-button" type="button" onClick={openWallNote}>Send me the wall ↗</button>
             </div>
 
-            <div className="process-track" style={{ "--active-step": activeStep } as CSSProperties}>
+            <div className="process-track" style={{ "--roller-offset": `${rollerOffset}px` } as CSSProperties}>
               <div className="process-rail" aria-hidden="true">
                 <div className="process-roller">
                   <span className="tiny-roller-head" />
@@ -483,7 +552,7 @@ export default function Home() {
               </div>
               <div className="process-list">
                 {processSteps.map(([title, text], index) => (
-                  <article className={"process-step " + (activeStep === index ? "is-active" : "")} key={title} data-process-step={index} data-reveal>
+                  <article className={"process-step " + (activeStep === index ? "is-active" : "")} key={title} data-process-step={index}>
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <div><h3>{title}</h3><p>{text}</p></div>
                   </article>
@@ -549,7 +618,7 @@ export default function Home() {
         <a href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a>
       </footer>
 
-      <nav className="mobile-action-bar" aria-label="Quick estimate actions">
+      <nav className={"mobile-action-bar " + (mobileActionsVisible ? "is-visible" : "")} aria-label="Quick estimate actions">
         <button type="button" onClick={openWallNote}>Show me the wall</button>
         <a href={instagramUrl} target="_blank" rel="noreferrer">See my work</a>
       </nav>
