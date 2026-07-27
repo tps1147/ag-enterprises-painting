@@ -5,9 +5,16 @@ import test from "node:test";
 const baseUrl = process.env.TEST_BASE_URL;
 const canonicalOrigin = new URL(process.env.TEST_CANONICAL_URL).origin;
 const canonicalUrl = canonicalOrigin + "/";
-const mode = process.env.TEST_MODE;
+const indexableValue = process.env.TEST_INDEXABLE;
+const urlSource = process.env.TEST_URL_SOURCE;
+const isIndexable = indexableValue === "true";
 
-if (!baseUrl || !process.env.TEST_CANONICAL_URL || !mode) {
+if (
+  !baseUrl ||
+  !process.env.TEST_CANONICAL_URL ||
+  !["true", "false"].includes(indexableValue) ||
+  !["custom", "vercel"].includes(urlSource)
+) {
   throw new Error("Run this test through scripts/test-production.mjs.");
 }
 
@@ -42,7 +49,13 @@ test("server-renders the landing page with canonical premium metadata", async ()
   assert.ok(html.includes("og-v3.jpg"));
   assert.ok(html.includes("That wall has a story."));
   assert.ok(html.includes("a better ending."));
-  assert.doesNotMatch(html, /localhost|chatgpt\.site|vercel\.app|Your site is taking shape|Starter Project/i);
+  assert.doesNotMatch(html, /localhost|chatgpt\.site|Your site is taking shape|Starter Project/i);
+
+  if (urlSource === "custom") {
+    assert.doesNotMatch(html, /vercel\.app/i);
+  } else {
+    assert.match(canonicalOrigin, /\.vercel\.app$/i);
+  }
 
   const h1Matches = html.match(/<h1\b/gi) ?? [];
   assert.equal(h1Matches.length, 1);
@@ -74,7 +87,7 @@ test("emits truthful HousePainter structured data", async () => {
   assert.equal(business.address.addressLocality, "Cinnaminson");
   assert.equal(business.hasOfferCatalog.itemListElement.length, 4);
   assert.deepEqual(business.sameAs, ["https://www.instagram.com/ag_enterprises_painting/"]);
-  assert.doesNotMatch(JSON.stringify(business), /aggregateRating|review|telephone|streetAddress|licensed|insured/i);
+  assert.doesNotMatch(JSON.stringify(business), /"(?:aggregateRating|review|telephone|streetAddress|licensed|insured)"\s*:/i);
 });
 
 test("serves canonical discovery files with mode-safe crawl rules", async () => {
@@ -85,7 +98,7 @@ test("serves canonical discovery files with mode-safe crawl rules", async () => 
   assert.match(robots, /User-Agent: \*/i);
   assert.ok(robots.includes("Sitemap: " + canonicalUrl + "sitemap.xml"));
 
-  if (mode === "production") {
+  if (isIndexable) {
     assert.match(robots, /Allow: \//i);
     assert.doesNotMatch(robots, /Disallow: \//i);
   } else {
@@ -98,7 +111,10 @@ test("serves canonical discovery files with mode-safe crawl rules", async () => 
   const sitemap = await sitemapResponse.text();
   assert.ok(sitemap.includes("<loc>" + canonicalUrl + "</loc>"));
   assert.ok(sitemap.includes(canonicalUrl + "work/exterior-column.jpg"));
-  assert.doesNotMatch(sitemap, /localhost|chatgpt\.site|vercel\.app/i);
+  assert.doesNotMatch(sitemap, /localhost|chatgpt\.site/i);
+  if (urlSource === "custom") {
+    assert.doesNotMatch(sitemap, /vercel\.app/i);
+  }
 
   const manifestResponse = await fetchRoute("/manifest.webmanifest");
   assert.equal(manifestResponse.status, 200);
@@ -108,12 +124,12 @@ test("serves canonical discovery files with mode-safe crawl rules", async () => 
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
 });
 
-test("production is indexable and previews fail closed", async () => {
+test("indexing follows the explicit deployment safety setting", async () => {
   const response = await fetchRoute();
   const html = await response.text();
   const robots = metaContent(html, "robots");
 
-  if (mode === "production") {
+  if (isIndexable) {
     assert.match(robots, /index/i);
     assert.match(robots, /follow/i);
     assert.doesNotMatch(robots, /noindex|nofollow/i);

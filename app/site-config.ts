@@ -1,11 +1,5 @@
 function normalizeSiteUrl(value: string | undefined): string {
   if (!value) {
-    if (process.env.VERCEL === "1") {
-      throw new Error(
-        "SITE_URL is required on Vercel. Set it to the purchased canonical domain in Production and Preview.",
-      );
-    }
-
     return "http://localhost:3000";
   }
 
@@ -30,7 +24,17 @@ function normalizeSiteUrl(value: string | undefined): string {
   return parsed.origin;
 }
 
-export const SITE_URL = normalizeSiteUrl(process.env.SITE_URL);
+function firstNonBlank(...values: Array<string | undefined>): string | undefined {
+  return values.find((value) => value?.trim());
+}
+
+export const SITE_URL = normalizeSiteUrl(
+  firstNonBlank(
+    process.env.SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ),
+);
 export const IS_INDEXABLE =
   process.env.SEO_INDEXING_ENABLED === "true" && process.env.VERCEL_ENV === "production";
 export const SITE_NAME = "AG Enterprises Painting";

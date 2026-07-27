@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-Local development falls back to `http://localhost:3000`. To test production metadata locally, copy `.env.example` to `.env.local` and set `SITE_URL` to the intended origin.
+Local development falls back to `http://localhost:3000`. To test custom-domain metadata locally, copy `.env.example` to `.env.local` and set `SITE_URL` to the intended origin.
 
 ## Validation
 
@@ -29,18 +29,19 @@ npm run check
 npm run audit:production
 ```
 
-The check runs ESLint, TypeScript, two native Next.js production builds, and HTTP-level tests for both indexable production behavior and non-indexable preview behavior. The production audit excludes development-only lint tooling and must report zero runtime vulnerabilities.
+The check runs ESLint, TypeScript, three native Next.js production builds, and HTTP-level tests for custom-domain production, temporary Vercel-domain production, and preview behavior. The production audit excludes development-only lint tooling and must report zero runtime vulnerabilities.
 
 ## Vercel setup
 
 1. Import the connected GitHub repository into Vercel and keep the detected **Next.js** framework preset. Leave Build Command, Output Directory, and Install Command at their defaults.
 2. Set the project's Node.js version to **22.x**.
-3. Add `SITE_URL=https://your-purchased-domain.com` to both **Production** and **Preview** environments. Use the final canonical host (apex or `www`) and do not include a path.
-4. Keep `SEO_INDEXING_ENABLED=false` for Preview. Keep it false for the first Production deployment until the custom domain is attached and verified.
+3. Deploy without `SITE_URL` while the custom domain is being prepared. The app automatically uses Vercel's stable project production URL for canonical metadata.
+4. Keep `SEO_INDEXING_ENABLED` unset or `false` in Preview and during temporary Production deployments.
 5. Add the purchased domain in Vercel, choose the canonical host, and configure the other host to redirect to it.
-6. Set `SEO_INDEXING_ENABLED=true` in Production and trigger a fresh Production deployment from the production branch. Do not promote a preview artifact, because it was intentionally built with no-index settings.
+6. Add `SITE_URL=https://your-purchased-domain.com` to both **Production** and **Preview** environments. Use the final canonical host (apex or `www`) and do not include a path.
+7. Set `SEO_INDEXING_ENABLED=true` in Production and trigger a fresh Production deployment from the production branch. Do not promote a preview artifact, because it was intentionally built with no-index settings.
 
-`SITE_URL` is required whenever Vercel builds the project. This prevents an accidental `vercel.app` or obsolete hosting URL from becoming the canonical URL.
+URL resolution follows `SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → `VERCEL_URL` → local development. This allows immediate `.vercel.app` deployments while preserving an explicit custom-domain override for launch.
 
 ## Main files
 

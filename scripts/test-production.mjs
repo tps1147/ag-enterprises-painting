@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const nextBin = fileURLToPath(new URL("../node_modules/next/dist/bin/next", import.meta.url));
 const testFile = fileURLToPath(new URL("../tests/rendered-html.test.mjs", import.meta.url));
-const canonicalUrl = "https://ag-enterprises-painting.test";
+const customCanonicalUrl = "https://ag-enterprises-painting.test";
+const vercelProjectUrl = "https://ag-enterprises-painting-bitblur.vercel.app";
+const vercelDeploymentUrl = "ag-enterprises-painting-build-123-bitblur.vercel.app";
 
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
@@ -85,17 +87,34 @@ async function stopServer(child) {
   }
 }
 
-async function verifyMode(mode, indexingEnabled) {
+async function verifyDeployment({
+  label,
+  mode,
+  siteUrl,
+  projectProductionUrl,
+  deploymentUrl,
+  indexingEnabled,
+  expectedCanonicalUrl,
+  expectedIndexable,
+  urlSource,
+}) {
   const env = {
     ...process.env,
     NEXT_TELEMETRY_DISABLED: "1",
-    SITE_URL: canonicalUrl,
     SEO_INDEXING_ENABLED: indexingEnabled ? "true" : "false",
     VERCEL: "1",
     VERCEL_ENV: mode,
   };
 
-  console.log(`\nBuilding native Next.js in ${mode} mode...`);
+  delete env.SITE_URL;
+  delete env.VERCEL_PROJECT_PRODUCTION_URL;
+  delete env.VERCEL_URL;
+
+  if (siteUrl) env.SITE_URL = siteUrl;
+  if (projectProductionUrl) env.VERCEL_PROJECT_PRODUCTION_URL = projectProductionUrl;
+  if (deploymentUrl) env.VERCEL_URL = deploymentUrl;
+
+  console.log(`\nBuilding native Next.js for ${label}...`);
   await run(process.execPath, [nextBin, "build"], { env });
 
   const port = await findOpenPort();
@@ -112,8 +131,9 @@ async function verifyMode(mode, indexingEnabled) {
       env: {
         ...env,
         TEST_BASE_URL: baseUrl,
-        TEST_CANONICAL_URL: canonicalUrl,
-        TEST_MODE: mode,
+        TEST_CANONICAL_URL: expectedCanonicalUrl,
+        TEST_INDEXABLE: expectedIndexable ? "true" : "false",
+        TEST_URL_SOURCE: urlSource,
       },
     });
   } finally {
@@ -121,6 +141,37 @@ async function verifyMode(mode, indexingEnabled) {
   }
 }
 
-await verifyMode("production", true);
-await verifyMode("preview", false);
-console.log("\nProduction and preview deployment behavior verified.");
+await verifyDeployment({
+  label: "custom-domain production",
+  mode: "production",
+  siteUrl: customCanonicalUrl,
+  projectProductionUrl: new URL(vercelProjectUrl).hostname,
+  deploymentUrl: vercelDeploymentUrl,
+  indexingEnabled: true,
+  expectedCanonicalUrl: customCanonicalUrl,
+  expectedIndexable: true,
+  urlSource: "custom",
+});
+
+await verifyDeployment({
+  label: "temporary Vercel-domain production",
+  mode: "production",
+  projectProductionUrl: new URL(vercelProjectUrl).hostname,
+  deploymentUrl: vercelDeploymentUrl,
+  indexingEnabled: false,
+  expectedCanonicalUrl: vercelProjectUrl,
+  expectedIndexable: false,
+  urlSource: "vercel",
+});
+
+await verifyDeployment({
+  label: "Vercel preview",
+  mode: "preview",
+  deploymentUrl: "ag-enterprises-painting-preview-456-bitblur.vercel.app",
+  indexingEnabled: false,
+  expectedCanonicalUrl: "https://ag-enterprises-painting-preview-456-bitblur.vercel.app",
+  expectedIndexable: false,
+  urlSource: "vercel",
+});
+
+console.log("\nCustom-domain, temporary production, and preview behavior verified.");
