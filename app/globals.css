@@ -736,7 +736,7 @@ h1 {
 }
 
 .hero-copy > * {
-  opacity: 0;
+  opacity: 1;
   transform: translateY(16px);
   animation: hero-pop 420ms cubic-bezier(.2,.8,.25,1) forwards;
 }

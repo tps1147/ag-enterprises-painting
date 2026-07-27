@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const instagramUrl = "https://www.instagram.com/ag_enterprises_painting/";
@@ -264,23 +265,28 @@ export default function Home() {
     const hero = document.querySelector<HTMLElement>(".hero");
     if (!hero) return;
 
-    if (typeof window.IntersectionObserver !== "function") {
-      setMobileActionsVisible(true);
-      return;
-    }
-
     let heroObserver: IntersectionObserver | null = null;
-    try {
-      heroObserver = new IntersectionObserver(
-        ([entry]) => setMobileActionsVisible(!entry.isIntersecting),
-        { threshold: 0.08 },
-      );
-      heroObserver.observe(hero);
-    } catch {
-      setMobileActionsVisible(true);
+    let fallbackFrame: number | null = null;
+    const showFallbackActions = () => setMobileActionsVisible(true);
+
+    if (typeof window.IntersectionObserver !== "function") {
+      fallbackFrame = window.requestAnimationFrame(showFallbackActions);
+    } else {
+      try {
+        heroObserver = new IntersectionObserver(
+          ([entry]) => setMobileActionsVisible(!entry.isIntersecting),
+          { threshold: 0.08 },
+        );
+        heroObserver.observe(hero);
+      } catch {
+        fallbackFrame = window.requestAnimationFrame(showFallbackActions);
+      }
     }
 
-    return () => heroObserver?.disconnect();
+    return () => {
+      heroObserver?.disconnect();
+      if (fallbackFrame !== null) window.cancelAnimationFrame(fallbackFrame);
+    };
   }, []);
 
   const replayRoller = () => {
@@ -387,21 +393,23 @@ export default function Home() {
             <span className="tape tape-two" aria-hidden="true" />
 
             <figure className="hero-photo hero-photo-main">
-              <img
+              <Image
                 src="/work/exterior-column.jpg"
                 alt="Freshly painted white exterior porch column beside brickwork"
-                width="640"
-                height="853"
+                width={640}
+                height={853}
                 fetchPriority="high"
+                sizes="(max-width: 900px) 68vw, 34vw"
               />
             </figure>
 
             <figure className="hero-photo hero-photo-small">
-              <img
+              <Image
                 src="/work/kitchen-reset-v3.webp"
                 alt="Freshly repainted galley kitchen with gray cabinets"
-                width="1536"
-                height="1920"
+                width={1536}
+                height={1920}
+                sizes="(max-width: 900px) 46vw, 18vw"
               />
             </figure>
 
@@ -490,7 +498,14 @@ export default function Home() {
                   >
                     <span className="project-tape" aria-hidden="true" />
                     <span className="project-image">
-                      <img src={project.image} alt={project.alt} width={project.width} height={project.height} loading="lazy" />
+                      <Image
+                        src={project.image}
+                        alt={project.alt}
+                        width={project.width}
+                        height={project.height}
+                        loading="lazy"
+                        sizes="(max-width: 650px) 92vw, (max-width: 1050px) 46vw, 31vw"
+                      />
                       <span className="project-note" id={`project-note-${index}`} aria-hidden={!isOpen}>
                         <small>What I handled</small>
                         {project.note}
@@ -514,12 +529,13 @@ export default function Home() {
         <section className="prep-section" aria-labelledby="prep-heading">
           <div className="shell prep-layout">
             <div className="prep-photo" data-reveal>
-              <img
+              <Image
                 src="/work/careful-prep.jpg"
                 alt="Floor and room carefully protected before wall repair and painting"
-                width="640"
-                height="800"
+                width={640}
+                height={800}
                 loading="lazy"
+                sizes="(max-width: 900px) 100vw, 44vw"
               />
               <span className="prep-sticker">This is where the good finish begins.</span>
             </div>

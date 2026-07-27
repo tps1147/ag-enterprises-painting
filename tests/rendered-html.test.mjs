@@ -2,45 +2,47 @@ import assert from "node:assert/strict";
 import { access, readFile, stat } from "node:fs/promises";
 import test from "node:test";
 
-const canonicalUrl = "https://ag-enterprises-painting.create851050.chatgpt.site/";
+const baseUrl = process.env.TEST_BASE_URL;
+const canonicalOrigin = new URL(process.env.TEST_CANONICAL_URL).origin;
+const canonicalUrl = canonicalOrigin + "/";
+const mode = process.env.TEST_MODE;
 
-async function fetchRoute(pathname = "/") {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", String(process.pid) + "-" + Date.now() + "-" + pathname);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request(new URL(pathname, "http://localhost/"), {
-      headers: { accept: pathname === "/" ? "text/html" : "*/*", host: "localhost" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
+if (!baseUrl || !process.env.TEST_CANONICAL_URL || !mode) {
+  throw new Error("Run this test through scripts/test-production.mjs.");
 }
 
-test("server-renders the landing page with stable premium metadata", async () => {
+async function fetchRoute(pathname = "/") {
+  return fetch(new URL(pathname, baseUrl), {
+    headers: { accept: pathname === "/" ? "text/html" : "*/*" },
+  });
+}
+
+function metaContent(html, name) {
+  const pattern = new RegExp(
+    `<meta[^>]+name=["']${name}["'][^>]+content=["']([^"']*)["'][^>]*>`,
+    "i",
+  );
+  return html.match(pattern)?.[1] ?? "";
+}
+
+test("server-renders the landing page with canonical premium metadata", async () => {
   const response = await fetchRoute();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.equal(response.headers.get("x-frame-options"), "DENY");
 
   const html = await response.text();
   assert.match(html, /<html[^>]*lang=["']en-US["']/i);
   assert.ok(html.includes("<title>Cinnaminson Interior Painter &amp; Drywall Repair | AG Enterprises</title>"));
   assert.ok(html.includes("Andrew handles interior painting, drywall repair, skim coating"));
-  assert.ok(html.includes('rel="canonical" href="' + canonicalUrl + '"'));
-  assert.ok(html.includes('property="og:url" content="' + canonicalUrl + '"'));
+  assert.ok(html.includes('rel="canonical" href="' + canonicalOrigin + '"'));
+  assert.ok(html.includes('property="og:url" content="' + canonicalOrigin + '"'));
   assert.ok(html.includes("https://www.instagram.com/ag_enterprises_painting/"));
   assert.ok(html.includes("og-v3.jpg"));
   assert.ok(html.includes("That wall has a story."));
   assert.ok(html.includes("a better ending."));
-  assert.doesNotMatch(html, /localhost|Your site is taking shape|react-loading-skeleton|Starter Project/i);
+  assert.doesNotMatch(html, /localhost|chatgpt\.site|vercel\.app|Your site is taking shape|Starter Project/i);
 
   const h1Matches = html.match(/<h1\b/gi) ?? [];
   assert.equal(h1Matches.length, 1);
@@ -75,14 +77,20 @@ test("emits truthful HousePainter structured data", async () => {
   assert.doesNotMatch(JSON.stringify(business), /aggregateRating|review|telephone|streetAddress|licensed|insured/i);
 });
 
-test("serves canonical crawl discovery files", async () => {
+test("serves canonical discovery files with mode-safe crawl rules", async () => {
   const robotsResponse = await fetchRoute("/robots.txt");
   assert.equal(robotsResponse.status, 200);
   assert.match(robotsResponse.headers.get("content-type") ?? "", /^text\/plain\b/i);
   const robots = await robotsResponse.text();
   assert.match(robots, /User-Agent: \*/i);
-  assert.match(robots, /Allow: \//i);
   assert.ok(robots.includes("Sitemap: " + canonicalUrl + "sitemap.xml"));
+
+  if (mode === "production") {
+    assert.match(robots, /Allow: \//i);
+    assert.doesNotMatch(robots, /Disallow: \//i);
+  } else {
+    assert.match(robots, /Disallow: \//i);
+  }
 
   const sitemapResponse = await fetchRoute("/sitemap.xml");
   assert.equal(sitemapResponse.status, 200);
@@ -90,7 +98,8 @@ test("serves canonical crawl discovery files", async () => {
   const sitemap = await sitemapResponse.text();
   assert.ok(sitemap.includes("<loc>" + canonicalUrl + "</loc>"));
   assert.ok(sitemap.includes(canonicalUrl + "work/exterior-column.jpg"));
-  assert.doesNotMatch(sitemap, /localhost|preview/i);
+  assert.doesNotMatch(sitemap, /localhost|chatgpt\.site|vercel\.app/i);
+
   const manifestResponse = await fetchRoute("/manifest.webmanifest");
   assert.equal(manifestResponse.status, 200);
   assert.match(manifestResponse.headers.get("content-type") ?? "", /manifest|json/i);
@@ -99,12 +108,40 @@ test("serves canonical crawl discovery files", async () => {
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
 });
 
+test("production is indexable and previews fail closed", async () => {
+  const response = await fetchRoute();
+  const html = await response.text();
+  const robots = metaContent(html, "robots");
+
+  if (mode === "production") {
+    assert.match(robots, /index/i);
+    assert.match(robots, /follow/i);
+    assert.doesNotMatch(robots, /noindex|nofollow/i);
+    assert.equal(response.headers.get("x-robots-tag"), null);
+  } else {
+    assert.match(robots, /noindex/i);
+    assert.match(robots, /nofollow/i);
+    assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
+  }
+});
+
+test("optimizes local project photography through the Next Image pipeline", async () => {
+  const response = await fetchRoute(
+    "/_next/image?url=%2Fwork%2Fexterior-column.jpg&w=640&q=75",
+  );
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^image\/(avif|webp|jpeg|jpg)\b/i);
+  assert.ok((await response.arrayBuffer()).byteLength > 1_000);
+});
+
 test("keeps assets, palette, motion safety, and contact path intact", async () => {
-  const [page, css, layout, packageJson, socialImageStat] = await Promise.all([
+  const [page, css, layout, packageJson, nextConfig, envExample, socialImageStat] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../.env.example", import.meta.url), "utf8"),
     stat(new URL("../public/og-v3.jpg", import.meta.url)),
   ]);
 
@@ -128,6 +165,7 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
   assert.ok(page.includes("--roller-offset"));
   assert.ok(page.includes("ResizeObserver"));
   assert.ok(page.includes('typeof window.IntersectionObserver !== "function"'));
+  assert.ok(page.includes('from "next/image"'));
   assert.doesNotMatch(page, /data-process-step={index} data-reveal/);
   assert.doesNotMatch(page, /className="process-intro" data-reveal/);
   assert.doesNotMatch(page, /tel:|mailto:|five-star|licensed|insured/i);
@@ -144,8 +182,19 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
   assert.ok(css.includes("safe-area-inset-bottom"));
 
   assert.ok(layout.includes("HousePainter"));
-  assert.ok(layout.includes("max-image-preview"));
+  assert.ok(layout.includes("IS_INDEXABLE"));
   assert.ok(socialImageStat.size < 300_000);
-  assert.doesNotMatch(packageJson, /react-loading-skeleton/);
-  await assert.rejects(access(new URL("../app/_sites-preview", import.meta.url)));
+  assert.doesNotMatch(packageJson, /vinext|wrangler|cloudflare|drizzle|react-loading-skeleton/i);
+  assert.match(packageJson, /"build": "next build"/);
+  assert.match(nextConfig, /X-Robots-Tag/);
+  assert.match(envExample, /SITE_URL=https:\/\/your-purchased-domain\.com/);
+  assert.match(envExample, /SEO_INDEXING_ENABLED=false/);
+
+  await Promise.all([
+    "../.openai/hosting.json",
+    "../vite.config.ts",
+    "../worker/index.ts",
+    "../build/sites-vite-plugin.ts",
+    "../app/_sites-preview",
+  ].map((path) => assert.rejects(access(new URL(path, import.meta.url)))));
 });
