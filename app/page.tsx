@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
+import ContinuousWorldStage from "./components/ContinuousWorldStage";
 
 const instagramUrl = "https://www.instagram.com/ag_enterprises_painting/";
 
@@ -99,13 +100,6 @@ const projects = [
   },
 ];
 
-const processSteps = [
-  ["Send the evidence", "Share one room photo, a close-up, your town, and the short version of what is going on."],
-  ["Talk it through", "I’ll look at the surface and explain what likely needs repair, prep, and paint."],
-  ["Protect, repair, paint", "The room gets covered, the wall gets made right, and the finish goes on carefully."],
-  ["Walk in and smile", "Look over the finished room and enjoy not staring at that one spot anymore."],
-];
-
 const faqs = [
   [
     "Is my job too small?",
@@ -136,19 +130,14 @@ const faqs = [
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openProject, setOpenProject] = useState<number | null>(null);
-  const [activeStep, setActiveStep] = useState(0);
-  const [rollerOffset, setRollerOffset] = useState(3);
   const [mobileActionsVisible, setMobileActionsVisible] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const rollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
-    const stepItems = Array.from(document.querySelectorAll<HTMLElement>("[data-process-step]"));
 
     let revealObserver: IntersectionObserver | null = null;
-    let processResizeObserver: ResizeObserver | null = null;
 
     const showAllRevealItems = () => {
       revealItems.forEach((item) => item.classList.add("is-visible"));
@@ -180,55 +169,8 @@ export default function Home() {
       }
     }
 
-    let processFrame = 0;
-
-    const updateProcess = () => {
-      processFrame = 0;
-      if (!stepItems.length) return;
-
-      const readingLine = Math.min(window.innerHeight * 0.48, 520);
-      let closestIndex = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
-
-      stepItems.forEach((item, index) => {
-        const rect = item.getBoundingClientRect();
-        const marker = rect.top + Math.min(rect.height * 0.34, 64);
-        const distance = Math.abs(marker - readingLine);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      const nextOffset = Math.round(stepItems[closestIndex].offsetTop + 3);
-      setActiveStep((current) => current === closestIndex ? current : closestIndex);
-      setRollerOffset((current) => current === nextOffset ? current : nextOffset);
-    };
-
-    const queueProcessUpdate = () => {
-      if (!processFrame) processFrame = window.requestAnimationFrame(updateProcess);
-    };
-
-    if (typeof window.ResizeObserver === "function") {
-      try {
-        processResizeObserver = new ResizeObserver(queueProcessUpdate);
-        stepItems.forEach((item) => processResizeObserver?.observe(item));
-      } catch {
-        processResizeObserver?.disconnect();
-        processResizeObserver = null;
-      }
-    }
-    window.addEventListener("scroll", queueProcessUpdate, { passive: true });
-    window.addEventListener("resize", queueProcessUpdate);
-    queueProcessUpdate();
-
     return () => {
       revealObserver?.disconnect();
-      processResizeObserver?.disconnect();
-      window.removeEventListener("scroll", queueProcessUpdate);
-      window.removeEventListener("resize", queueProcessUpdate);
-      if (processFrame) window.cancelAnimationFrame(processFrame);
       document.documentElement.classList.remove("motion-ready");
     };
   }, []);
@@ -289,17 +231,8 @@ export default function Home() {
     };
   }, []);
 
-  const replayRoller = () => {
-    const roller = rollerRef.current;
-    if (!roller || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    roller.classList.remove("is-rolling");
-    void roller.offsetWidth;
-    roller.classList.add("is-rolling");
-  };
-
   const openWallNote = () => {
     setMenuOpen(false);
-    replayRoller();
     dialogRef.current?.showModal();
   };
 
@@ -345,17 +278,21 @@ export default function Home() {
               <a href="#faq" onClick={() => setMenuOpen(false)}>FAQs</a>
             </div>
 
-            <button className="nav-cta" type="button" onClick={openWallNote} onPointerEnter={replayRoller}>
-              Send me a photo <span aria-hidden="true">↗</span>
+            <button className="nav-cta" type="button" onClick={openWallNote}>
+              Show me the wall <span aria-hidden="true">↗</span>
             </button>
           </nav>
         </div>
       </header>
 
-      <main id="main-content">
+      <div className="world-journey">
+        <ContinuousWorldStage />
+        <div className="world-chapters">
+      <main className="world-page" id="main-content">
         <section className="hero shell" id="top" aria-labelledby="hero-heading">
-          <div className="hero-copy">
-            <p className="eyebrow">Interior painting + wall repair · Cinnaminson, NJ</p>
+          <span className="world-cue" data-world-frame="arrival" aria-hidden="true" />
+          <div className="hero-copy world-panel panel-coral">
+            <p className="eyebrow"><span className="chapter-number" aria-hidden="true">01</span> Interior painting + wall repair · Cinnaminson, NJ</p>
             <h1 id="hero-heading">
               That wall has a story.
               <br />
@@ -368,7 +305,7 @@ export default function Home() {
             </p>
 
             <div className="hero-actions" role="group" aria-label="Estimate options">
-              <button className="button button-primary" type="button" onClick={openWallNote} onPointerEnter={replayRoller}>
+              <button className="button button-primary" type="button" onClick={openWallNote}>
                 Show me the wall <span aria-hidden="true">↗</span>
               </button>
               <a className="button button-secondary" href={instagramUrl} target="_blank" rel="noreferrer">
@@ -387,51 +324,6 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="hero-art" role="group" aria-label="Recent AG Enterprises Painting work">
-            <div className="photo-swatch" aria-hidden="true" />
-            <span className="tape tape-one" aria-hidden="true" />
-            <span className="tape tape-two" aria-hidden="true" />
-
-            <figure className="hero-photo hero-photo-main">
-              <Image
-                src="/work/exterior-column.jpg"
-                alt="Freshly painted white exterior porch column beside brickwork"
-                width={640}
-                height={853}
-                fetchPriority="high"
-                sizes="(max-width: 900px) 68vw, 34vw"
-              />
-            </figure>
-
-            <figure className="hero-photo hero-photo-small">
-              <Image
-                src="/work/kitchen-reset-v3.webp"
-                alt="Freshly repainted galley kitchen with gray cabinets"
-                width={1536}
-                height={1920}
-                sizes="(max-width: 900px) 46vw, 18vw"
-              />
-            </figure>
-
-            <p className="photo-caption">real jobs<br />real local walls</p>
-
-            <div className="quality-seal" role="img" aria-label="Fix it right, paint it nice">
-              <div className="quality-seal-ring" aria-hidden="true">
-                <span>Fix it right · paint it nice</span>
-                <span>Good work · good mood</span>
-              </div>
-              <span className="quality-seal-core">MUCH<br />BETTER.</span>
-            </div>
-
-            <div className="roller-hello" ref={rollerRef} aria-hidden="true">
-              <span className="roller-bubble">Let&apos;s get it sorted.</span>
-              <div className="roller-tool">
-                <span className="roller-head" />
-                <span className="roller-arm" />
-                <span className="roller-handle" />
-              </div>
-            </div>
-          </div>
         </section>
 
         <div className="service-ticker" role="group" aria-label="AG Enterprises Painting services">
@@ -446,10 +338,11 @@ export default function Home() {
         </div>
 
         <section className="services-section" id="services" aria-labelledby="services-heading">
-          <div className="shell">
-            <div className="section-head light-head" data-reveal>
+          <span className="world-cue" data-world-frame="services" aria-hidden="true" />
+          <div className="shell services-shell">
+            <div className="section-head light-head world-panel panel-coral" data-reveal>
               <div>
-                <p className="section-kicker">What I handle</p>
+                <p className="section-kicker"><span className="chapter-number" aria-hidden="true">02</span> What I handle</p>
                 <h2 id="services-heading">Fix the wall. Then make the room feel good again.</h2>
               </div>
               <p>
@@ -459,7 +352,7 @@ export default function Home() {
 
             <div className="service-grid">
               {services.map((service) => (
-                <article className={"service-card tone-" + service.tone} key={service.title} data-reveal>
+                <article className={"service-card service-slip tone-" + service.tone} key={service.title} data-reveal>
                   <span className="service-number" aria-hidden="true">{service.number}</span>
                   <span className="service-icon" aria-hidden="true">{service.symbol}</span>
                   <h3>{service.title}</h3>
@@ -468,17 +361,79 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="inline-cta" data-reveal>
+            <div className="inline-cta world-panel panel-mint" data-reveal>
               <p><strong>Patch, skim coat, or paint?</strong> You do not need to figure that out before you reach out.</p>
               <button className="text-button" type="button" onClick={openWallNote}>Ask Andrew <span aria-hidden="true">↗</span></button>
             </div>
           </div>
         </section>
 
+        <section className="prep-section" id="prep" aria-labelledby="prep-heading">
+          <span className="world-cue" data-world-frame="inspection" aria-hidden="true" />
+          <div className="shell prep-layout">
+            <div className="prep-photo proof-snapshot" data-reveal>
+              <Image
+                src="/work/careful-prep.jpg"
+                alt="Floor and room carefully protected before wall repair and painting"
+                width={640}
+                height={800}
+                loading="lazy"
+                sizes="(max-width: 580px) 205px, (max-width: 900px) 250px, 25vw"
+              />
+              <span className="prep-sticker">This is where the good finish begins.</span>
+            </div>
+
+            <div className="prep-copy world-panel panel-butter" data-reveal>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">03</span> Where good work starts</p>
+              <h2 id="prep-heading">Paint is the last step, not the magic trick.</h2>
+              <p className="large-copy">
+                If the wall is cracked, lumpy, or still wearing yesterday’s wallpaper glue, a fresh color will not fix it. I protect the room and get the surface right first, so the finished job looks good for the right reason.
+              </p>
+              <ol className="prep-list">
+                <li><span>01</span><div><strong>Protect first</strong><p>Cover floors, furniture, and nearby surfaces before the dusty work begins.</p></div></li>
+                <li><span>02</span><div><strong>Make the wall right</strong><p>Repair cracks, holes, nail pops, rough patches, and old adhesive as needed.</p></div></li>
+                <li><span>03</span><div><strong>Paint the room—not the floor</strong><p>Prime where needed, paint evenly, keep the edges crisp, and look it all over.</p></div></li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section className="world-process-section" id="process" aria-labelledby="process-heading">
+          <article className="world-process-beat world-process-repair shell">
+            <span className="world-cue" data-world-frame="repair" aria-hidden="true" />
+            <div className="world-copy-panel world-panel panel-coral" data-reveal>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">04</span> Make the wall right</p>
+              <h2 id="process-heading">The prep is the promise.</h2>
+              <p>
+                I cover the room, repair what paint cannot hide, and smooth the surface that needs it before the new color goes on. The boring-looking part is usually the part doing the most work.
+              </p>
+              <ul className="world-process-list">
+                <li><span>01</span> Protect the room</li>
+                <li><span>02</span> Repair and smooth</li>
+                <li><span>03</span> Prime where needed</li>
+              </ul>
+            </div>
+          </article>
+
+          <article className="world-process-beat world-process-paint shell">
+            <span className="world-cue" data-world-frame="paint" aria-hidden="true" />
+            <div className="world-copy-panel world-panel panel-mint" data-reveal>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">05</span> Then the fun part</p>
+              <h2>From “uh-oh” to “oh, nice.”</h2>
+              <p>
+                Paint goes on evenly, the edges stay crisp, and I look the room over before the drop cloths come up. Then you get to stop staring at that one spot.
+              </p>
+              <button className="text-button" type="button" onClick={openWallNote}>Show me the wall ↗</button>
+              <small>One wide shot. One close-up. Your town. That’s plenty to start.</small>
+            </div>
+          </article>
+        </section>
+
         <section className="projects-section shell" id="work" aria-labelledby="work-heading">
-          <div className="section-head" data-reveal>
+          <span className="world-cue" data-world-frame="gallery" aria-hidden="true" />
+          <div className="section-head world-panel panel-butter" data-reveal>
             <div>
-              <p className="section-kicker">The honest camera roll</p>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">06</span> The honest camera roll</p>
               <h2 id="work-heading">Real walls. Careful work. No stock photos.</h2>
             </div>
             <p>These are actual AG Enterprises Painting jobs around South Jersey. Open one to see what I repaired, prepared, or painted.</p>
@@ -490,7 +445,7 @@ export default function Home() {
               return (
                 <article className={"project-card-wrap project-" + (index + 1)} key={project.title} data-reveal>
                   <button
-                    className={"project-card " + (isOpen ? "is-open" : "")}
+                    className={"project-card proof-card " + (isOpen ? "is-open" : "")}
                     type="button"
                     aria-expanded={isOpen}
                     aria-controls={`project-note-${index}`}
@@ -526,43 +481,15 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="prep-section" aria-labelledby="prep-heading">
-          <div className="shell prep-layout">
-            <div className="prep-photo" data-reveal>
-              <Image
-                src="/work/careful-prep.jpg"
-                alt="Floor and room carefully protected before wall repair and painting"
-                width={640}
-                height={800}
-                loading="lazy"
-                sizes="(max-width: 900px) 100vw, 44vw"
-              />
-              <span className="prep-sticker">This is where the good finish begins.</span>
-            </div>
-
-            <div className="prep-copy" data-reveal>
-              <p className="section-kicker">Where good work starts</p>
-              <h2 id="prep-heading">Paint is the last step, not the magic trick.</h2>
-              <p className="large-copy">
-                If the wall is cracked, lumpy, or still wearing yesterday’s wallpaper glue, a fresh color will not fix it. I protect the room and get the surface right first, so the finished job looks good for the right reason.
-              </p>
-              <ol className="prep-list">
-                <li><span>01</span><div><strong>Protect first</strong><p>Cover floors, furniture, and nearby surfaces before the dusty work begins.</p></div></li>
-                <li><span>02</span><div><strong>Make the wall right</strong><p>Repair cracks, holes, nail pops, rough patches, and old adhesive as needed.</p></div></li>
-                <li><span>03</span><div><strong>Paint the room—not the floor</strong><p>Prime where needed, paint evenly, keep the edges crisp, and look it all over.</p></div></li>
-              </ol>
-            </div>
-          </div>
-        </section>
-
         <section className="owner-section shell" id="andrew" aria-labelledby="owner-heading">
-          <div className="owner-card" data-reveal>
+          <span className="world-cue" data-world-frame="andrew" aria-hidden="true" />
+          <div className="owner-card world-panel panel-mint" data-reveal>
             <div className="owner-badge" aria-hidden="true">
               <span>AG</span>
               <small>Andrew at AG</small>
             </div>
             <div className="owner-copy">
-              <p className="section-kicker">The person behind the paint</p>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">07</span> The person behind the paint</p>
               <h2 id="owner-heading">Hi, I&apos;m Andrew. I take the work seriously—myself, less so.</h2>
               <p>
                 At AG Enterprises Painting, I take on the focused jobs that can make a whole home feel better: the drywall patch you keep noticing, the rough wall, the tired ceiling, or the room that just needs a reset.
@@ -579,38 +506,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="process-section" id="process" aria-labelledby="process-heading">
-          <div className="shell process-layout">
-            <div className="process-intro">
-              <p className="section-kicker">No mystery process</p>
-              <h2 id="process-heading">From “uh-oh” to “oh, nice.”</h2>
-              <p>You send the wall. I take a look. Then we make a sensible plan for getting it from “uh-oh” to “oh, nice.”</p>
-              <button className="text-button" type="button" onClick={openWallNote}>Send me the wall ↗</button>
-            </div>
-
-            <div className="process-track" style={{ "--roller-offset": `${rollerOffset}px` } as CSSProperties}>
-              <div className="process-rail" aria-hidden="true">
-                <div className="process-roller">
-                  <span className="tiny-roller-head" />
-                  <span className="tiny-roller-handle" />
-                </div>
-              </div>
-              <div className="process-list">
-                {processSteps.map(([title, text], index) => (
-                  <article className={"process-step " + (activeStep === index ? "is-active" : "")} key={title} data-process-step={index}>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <div><h3>{title}</h3><p>{text}</p></div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="area-section shell" aria-labelledby="area-heading">
-          <div className="area-card" data-reveal>
+        <section className="area-section shell" id="area" aria-labelledby="area-heading">
+          <span className="world-cue" data-world-frame="neighborhood" aria-hidden="true" />
+          <div className="area-card world-panel panel-butter" data-reveal>
             <div>
-              <p className="section-kicker">Cinnaminson home base</p>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">08</span> Cinnaminson home base</p>
               <h2 id="area-heading">Based in Cinnaminson. Working nearby in South Jersey.</h2>
             </div>
             <div>
@@ -623,25 +523,29 @@ export default function Home() {
         </section>
 
         <section className="faq-section shell" id="faq" aria-labelledby="faq-heading">
-          <div className="faq-intro" data-reveal>
-            <p className="section-kicker">Questions people actually ask</p>
-            <h2 id="faq-heading">The useful stuff, before the drop cloths.</h2>
-            <p>If yours is not here, send me a photo and the short version.</p>
-          </div>
-          <div className="faq-list" data-reveal>
-            {faqs.map(([question, answer]) => (
-              <details key={question}>
-                <summary>{question}<span aria-hidden="true">+</span></summary>
-                <p>{answer}</p>
-              </details>
-            ))}
+          <span className="world-cue" data-world-frame="questions" aria-hidden="true" />
+          <div className="faq-panel world-panel panel-paper">
+            <div className="faq-intro" data-reveal>
+              <p className="section-kicker"><span className="chapter-number is-note" aria-hidden="true">NOTE</span> Questions people actually ask</p>
+              <h2 id="faq-heading">The useful stuff, before the drop cloths.</h2>
+              <p>If yours is not here, send me a photo and the short version.</p>
+            </div>
+            <div className="faq-list" data-reveal>
+              {faqs.map(([question, answer]) => (
+                <details key={question}>
+                  <summary>{question}<span aria-hidden="true">+</span></summary>
+                  <p>{answer}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </section>
 
         <section className="closing-section shell" id="contact" aria-labelledby="contact-heading">
-          <div className="closing-card" data-reveal>
+          <span className="world-cue" data-world-frame="closing" aria-hidden="true" />
+          <div className="closing-card world-panel panel-dark" data-reveal>
             <div className="closing-copy">
-              <p className="section-kicker">Start with a few photos</p>
+              <p className="section-kicker"><span className="chapter-number" aria-hidden="true">09</span> Start with a few photos</p>
               <h2 id="contact-heading">Show me what&apos;s bugging you.</h2>
               <p>Send one wide shot, one close-up, your town, and the honest version: “This corner is driving me nuts.” That is plenty to start.</p>
             </div>
@@ -662,6 +566,8 @@ export default function Home() {
         <p>Interior painting · Drywall repair · Skim coating · Wallpaper removal</p>
         <a href={instagramUrl} target="_blank" rel="noreferrer">Instagram ↗</a>
       </footer>
+        </div>
+      </div>
 
       <nav className={"mobile-action-bar " + (mobileActionsVisible ? "is-visible" : "")} aria-label="Quick estimate actions">
         <button type="button" onClick={openWallNote}>Show me the wall</button>
@@ -678,7 +584,7 @@ export default function Home() {
       >
         <div className="dialog-card">
           <button className="dialog-close" type="button" aria-label="Close photo guide" onClick={() => dialogRef.current?.close()}>×</button>
-          <p className="section-kicker">A useful first message</p>
+          <p className="section-kicker"><span className="chapter-number is-note" aria-hidden="true">START</span> A useful first message</p>
           <h2 id="wall-dialog-title">Give me the quick version.</h2>
           <p className="dialog-lede">You do not need to diagnose the wall. The easiest way to start is with a message on Instagram that includes:</p>
           <ol className="photo-checklist">

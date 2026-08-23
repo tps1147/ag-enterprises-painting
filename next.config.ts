@@ -23,6 +23,24 @@ const nextConfig: NextConfig = {
 
     return [
       {
+        source: "/scroll-world/ag-paint-world-v1.mp4",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/scroll-world/ag-paint-world-mobile-v1.mp4",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         source: "/:path*",
         headers: securityHeaders,
       },

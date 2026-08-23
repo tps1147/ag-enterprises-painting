@@ -61,11 +61,16 @@ test("server-renders the landing page with canonical premium metadata", async ()
   assert.equal(h1Matches.length, 1);
 
   const imageTags = html.match(/<img\b[^>]*>/gi) ?? [];
-  assert.ok(imageTags.length >= 9);
+  assert.ok(imageTags.length >= 7);
   for (const image of imageTags) {
-    assert.match(image, /\balt="[^"]+"/i);
-    assert.match(image, /\bwidth="\d+"/i);
-    assert.match(image, /\bheight="\d+"/i);
+    if (/\bclass="[^"]*world-video-poster/i.test(image)) {
+      assert.match(image, /\balt=""/i);
+    } else {
+      assert.match(image, /\balt="[^"]+"/i);
+    }
+    const hasIntrinsicDimensions = /\bwidth="\d+"/i.test(image) && /\bheight="\d+"/i.test(image);
+    const usesReservedFillLayout = /\bdata-nimg="fill"/i.test(image);
+    assert.ok(hasIntrinsicDimensions || usesReservedFillLayout);
   }
   assert.equal(imageTags.filter((image) => /fetchPriority="high"/i.test(image)).length, 1);
 });
@@ -150,15 +155,33 @@ test("optimizes local project photography through the Next Image pipeline", asyn
   assert.ok((await response.arrayBuffer()).byteLength > 1_000);
 });
 
-test("keeps assets, palette, motion safety, and contact path intact", async () => {
-  const [page, css, layout, packageJson, nextConfig, envExample, socialImageStat] = await Promise.all([
+test("keeps the full-page world, proof, motion safety, and contact path intact", async () => {
+  const worldFramePaths = [
+    "public/world/v1/01-arrival.webp",
+    "public/world/v1/02-services.webp",
+    "public/world/v1/03-inspection.webp",
+    "public/world/v1/04-repair.webp",
+    "public/world/v1/05-paint.webp",
+    "public/world/v1/06-gallery.webp",
+    "public/world/v1/07-andrew.webp",
+    "public/world/v1/08-neighborhood.webp",
+    "public/world/v1/09-closing.webp",
+    "public/world/v1/01-arrival-mobile.webp",
+  ];
+
+  const [page, worldStage, css, worldUiCss, layout, packageJson, nextConfig, envExample, socialImageStat, masterVideoStat, mobileVideoStat, ...worldFrameStats] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/components/ContinuousWorldStage.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/world-ui.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
     readFile(new URL("../.env.example", import.meta.url), "utf8"),
     stat(new URL("../public/og-v3.jpg", import.meta.url)),
+    stat(new URL("../public/scroll-world/ag-paint-world-v1.mp4", import.meta.url)),
+    stat(new URL("../public/scroll-world/ag-paint-world-mobile-v1.mp4", import.meta.url)),
+    ...worldFramePaths.map((path) => stat(new URL("../" + path, import.meta.url))),
   ]);
 
   await Promise.all([
@@ -172,19 +195,65 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
     "public/apple-touch-icon.png",
     "public/icon-192.png",
     "public/icon-512.png",
+    "public/scroll-world/ag-paint-world-v1.mp4",
+    "public/scroll-world/ag-paint-world-mobile-v1.mp4",
+    "public/scroll-world/ag-wall-story.mp4",
+    "public/scroll-world/story-uh-oh.webp",
+    "public/scroll-world/story-repaired.webp",
+    "public/scroll-world/story-finished.webp",
+    ...worldFramePaths,
   ].map((path) => access(new URL("../" + path, import.meta.url))));
 
   assert.ok(page.includes('aria-labelledby="hero-heading"'));
-  assert.ok(page.includes("prefers-reduced-motion: reduce"));
+  assert.ok(page.includes("<ContinuousWorldStage"));
+  const worldCueKeys = [
+    "arrival",
+    "services",
+    "inspection",
+    "repair",
+    "paint",
+    "gallery",
+    "andrew",
+    "neighborhood",
+    "questions",
+    "closing",
+  ];
+  for (const frame of worldCueKeys) {
+    const matches = page.match(new RegExp(`data-world-frame="${frame}"`, "g")) ?? [];
+    assert.equal(matches.length, 1, `${frame} should map to exactly one video cue`);
+    assert.ok(
+      page.includes(`<span className="world-cue" data-world-frame="${frame}" aria-hidden="true" />`),
+      `${frame} should use a layout-independent cue sentinel`,
+    );
+  }
+  assert.equal((page.match(/className="world-cue"/g) ?? []).length, worldCueKeys.length);
+  assert.doesNotMatch(page, /<(?:section|article)\b[^>]*data-world-frame=/i);
   assert.ok(page.includes("project-note-"));
   assert.ok(page.includes("You do not need to diagnose the wall"));
-  assert.ok(page.includes("--roller-offset"));
-  assert.ok(page.includes("ResizeObserver"));
-  assert.ok(page.includes('typeof window.IntersectionObserver !== "function"'));
   assert.ok(page.includes('from "next/image"'));
-  assert.doesNotMatch(page, /data-process-step={index} data-reveal/);
-  assert.doesNotMatch(page, /className="process-intro" data-reveal/);
+  assert.doesNotMatch(page, /ScrollStory/);
   assert.doesNotMatch(page, /tel:|mailto:|five-star|licensed|insured/i);
+
+  assert.ok(worldStage.includes("ResizeObserver"));
+  assert.ok(worldStage.includes("requestAnimationFrame"));
+  assert.ok(worldStage.includes('{ passive: true }'));
+  assert.ok(worldStage.includes("video.currentTime"));
+  assert.ok(worldStage.includes("/scroll-world/ag-paint-world-v1.mp4"));
+  assert.ok(worldStage.includes("/scroll-world/ag-paint-world-mobile-v1.mp4"));
+  assert.ok(worldStage.includes("/world/v1/01-arrival-mobile.webp"));
+  assert.ok(worldStage.includes("prefers-reduced-motion: reduce"));
+  assert.ok(worldStage.includes("prefers-reduced-data: reduce"));
+  assert.ok(worldStage.includes("saveData"));
+  assert.ok(worldStage.includes("slow-2g"));
+  assert.ok(worldStage.includes('"3g"'));
+  assert.ok(worldStage.includes("playsInline"));
+  assert.ok(worldStage.includes("preload=\"auto\""));
+  assert.ok(worldStage.includes('data-ready="false"'));
+  assert.ok(worldStage.includes('addEventListener("seeked"'));
+  assert.ok(worldStage.includes('aria-hidden="true"'));
+  assert.ok(worldStage.includes('{ key: "questions", fraction: 8 / 9 }'));
+  assert.ok(worldStage.includes('{ key: "neighborhood", fraction: 8 / 9 }'));
+  assert.doesNotMatch(worldStage, /world-frame-image|activeIndex|setActive/i);
 
   assert.ok(css.includes("--cream: #fff5e5"));
   assert.ok(css.includes("--navy: #153046"));
@@ -193,16 +262,45 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
   assert.ok(css.includes("prefers-reduced-motion: reduce"));
   assert.ok(css.includes("@supports (animation-timeline: scroll())"));
   assert.ok(css.includes("translate: 0 24px"));
-  assert.ok(css.includes(".motion-ready .process-section .process-step"));
-  assert.match(css, /\.process-step\s*\{[\s\S]*?opacity:\s*1;/);
+  assert.ok(css.includes(".world-stage"));
+  assert.ok(css.includes("position: fixed"));
+  assert.ok(css.includes('.continuous-world-stage[data-ready="true"] .world-master-video'));
+  assert.doesNotMatch(css, /\.world-frame-image|world-frame-settle|world-stage-progress/);
+  assert.ok(css.includes("@media (forced-colors: active)"));
   assert.ok(css.includes("safe-area-inset-bottom"));
+  assert.doesNotMatch(css, /scroll-story/);
+
+  assert.ok(worldUiCss.includes("--world-paper:"));
+  assert.ok(worldUiCss.includes("--world-shadow:"));
+  assert.match(worldUiCss, /\.world-cue\s*\{/);
+  assert.match(worldUiCss, /\.world-cue\s*\{[\s\S]*?top: 48svh;/);
+  assert.match(worldUiCss, /\.faq-section > \.world-cue\s*\{[\s\S]*?top: 68svh;/);
+  assert.match(worldUiCss, /\.world-panel\s*\{/);
+  for (const panelClass of ["panel-coral", "panel-mint", "panel-butter", "panel-paper", "panel-dark"]) {
+    assert.ok(worldUiCss.includes(`.${panelClass}`), `${panelClass} should remain part of the overlay system`);
+  }
+  assert.ok(worldUiCss.includes(".continuous-world-stage[data-motion=\"static\"] + .world-chapters .world-panel"));
+  assert.ok(worldUiCss.includes("@media (max-width: 900px)"));
+  assert.ok(worldUiCss.includes("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(worldUiCss.includes("@media (forced-colors: active)"));
 
   assert.ok(layout.includes("HousePainter"));
   assert.ok(layout.includes("IS_INDEXABLE"));
+  const globalCssImport = layout.indexOf('import "./globals.css"');
+  const worldUiCssImport = layout.indexOf('import "./world-ui.css"');
+  assert.ok(globalCssImport >= 0);
+  assert.ok(worldUiCssImport > globalCssImport, "world-ui.css should load after the stable global foundation");
   assert.ok(socialImageStat.size < 300_000);
+  assert.ok(masterVideoStat.size > 5_000_000);
+  assert.ok(masterVideoStat.size < 18_000_000);
+  assert.ok(mobileVideoStat.size > 3_000_000);
+  assert.ok(mobileVideoStat.size < 8_000_000);
+  assert.ok(worldFrameStats.every((frame) => frame.size < 150_000));
+  assert.ok(worldFrameStats.reduce((total, frame) => total + frame.size, 0) < 700_000);
   assert.doesNotMatch(packageJson, /vinext|wrangler|cloudflare|drizzle|react-loading-skeleton/i);
   assert.match(packageJson, /"build": "next build"/);
   assert.match(nextConfig, /X-Robots-Tag/);
+  assert.match(nextConfig, /max-age=31536000, immutable/);
   assert.match(envExample, /SITE_URL=https:\/\/your-purchased-domain\.com/);
   assert.match(envExample, /SEO_INDEXING_ENABLED=false/);
 
@@ -213,4 +311,17 @@ test("keeps assets, palette, motion safety, and contact path intact", async () =
     "../build/sites-vite-plugin.ts",
     "../app/_sites-preview",
   ].map((path) => assert.rejects(access(new URL(path, import.meta.url)))));
+
+  for (const videoPath of [
+    "/scroll-world/ag-paint-world-v1.mp4",
+    "/scroll-world/ag-paint-world-mobile-v1.mp4",
+  ]) {
+    const videoResponse = await fetch(new URL(videoPath, baseUrl), {
+      headers: { range: "bytes=0-1023" },
+    });
+    assert.equal(videoResponse.status, 206);
+    assert.match(videoResponse.headers.get("content-type") ?? "", /^video\/mp4\b/i);
+    assert.match(videoResponse.headers.get("content-range") ?? "", /^bytes 0-1023\//i);
+    assert.equal((await videoResponse.arrayBuffer()).byteLength, 1024);
+  }
 });

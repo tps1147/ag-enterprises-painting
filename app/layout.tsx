@@ -9,6 +9,7 @@ import {
   SITE_URL,
 } from "./site-config";
 import "./globals.css";
+import "./world-ui.css";
 
 const metadataBase = new URL(SITE_URL);
 const socialImage = new URL("/og-v3.jpg", metadataBase).toString();

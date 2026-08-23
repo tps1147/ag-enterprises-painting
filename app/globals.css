@@ -790,8 +790,7 @@ h1 {
   from { opacity: 0; transform: translateY(100%); }
 }
 
-.services-section,
-.process-section {
+.services-section {
   color: var(--cream);
   background: var(--pine);
 }
@@ -825,7 +824,6 @@ h1 {
 .section-head h2,
 .prep-copy h2,
 .owner-copy h2,
-.process-intro h2,
 .area-card h2,
 .faq-intro h2,
 .closing-card h2,
@@ -843,7 +841,6 @@ h1 {
 }
 
 .light-head .section-kicker,
-.process-section .section-kicker,
 .closing-card .section-kicker {
   color: var(--butter);
 }
@@ -970,8 +967,7 @@ h1 {
   color: var(--coral-ink);
 }
 
-.inline-cta .text-button,
-.process-section .text-button {
+.inline-cta .text-button {
   color: var(--butter);
 }
 
@@ -1364,124 +1360,6 @@ h1 {
   transform: rotate(5deg);
 }
 
-.process-section {
-  padding-block: clamp(82px, 8.5vw, 120px);
-}
-
-.process-layout {
-  display: grid;
-  grid-template-columns: minmax(270px, 0.7fr) minmax(0, 1.3fr);
-  align-items: start;
-  gap: clamp(48px, 7vw, 96px);
-}
-
-.process-intro {
-  position: sticky;
-  top: calc(var(--header-height) + var(--anchor-gap));
-}
-
-.process-intro h2 {
-  margin-bottom: 25px;
-}
-
-.process-intro > p:not(.section-kicker) {
-  color: rgba(255, 245, 229, 0.73);
-}
-
-.process-track {
-  position: relative;
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 28px;
-}
-
-.process-rail {
-  position: relative;
-}
-
-.process-rail::before {
-  position: absolute;
-  top: 12px;
-  bottom: 12px;
-  left: 29px;
-  width: 3px;
-  border-radius: 99px;
-  background: rgba(255, 245, 229, 0.22);
-  content: "";
-}
-
-.process-roller {
-  position: absolute;
-  top: 3px;
-  translate: 0 calc(var(--roller-offset, 3px) - 3px);
-  left: 5px;
-  z-index: 2;
-  width: 50px;
-  height: 52px;
-  transition: translate 300ms cubic-bezier(.2,.8,.25,1);
-}
-
-.tiny-roller-head {
-  position: absolute;
-  top: 2px;
-  left: 0;
-  width: 38px;
-  height: 14px;
-  border: 2px solid var(--navy-deep);
-  border-radius: 5px;
-  background: var(--coral);
-}
-
-.tiny-roller-handle {
-  position: absolute;
-  top: 15px;
-  left: 30px;
-  width: 12px;
-  height: 29px;
-  border-right: 3px solid var(--cream);
-  border-bottom: 3px solid var(--cream);
-  border-radius: 0 0 5px;
-}
-
-.process-list {
-  display: grid;
-}
-
-.process-step {
-  display: grid;
-  grid-template-columns: 62px 1fr;
-  gap: 22px;
-  min-height: 190px;
-  padding: 13px 0 44px;
-  border-bottom: 1px solid rgba(255, 245, 229, 0.2);
-  opacity: 1;
-  transition: transform 280ms ease;
-}
-
-.process-step.is-active {
-  transform: translateX(6px);
-}
-
-.process-step > span {
-  color: var(--butter);
-  font-size: 0.72rem;
-  font-weight: 950;
-  letter-spacing: 0.1em;
-}
-
-.process-step h3 {
-  margin: 0 0 13px;
-  font-size: clamp(1.65rem, 3vw, 2.45rem);
-  font-weight: 950;
-  letter-spacing: -0.045em;
-}
-
-.process-step p {
-  max-width: 550px;
-  margin-bottom: 0;
-  color: rgba(255, 245, 229, 0.7);
-}
-
 .area-section {
   padding-block: clamp(84px, 9vw, 124px) 0;
 }
@@ -1841,15 +1719,8 @@ h1 {
   translate: 0 0;
 }
 
-/* The process is useful content, so motion may emphasize it but never hide it. */
-.motion-ready .process-section .process-intro,
-.motion-ready .process-section .process-step,
-.motion-ready .process-section .process-step[data-reveal],
-.motion-ready .process-section .process-step[data-reveal].is-visible {
-  opacity: 1;
-  translate: none;
-  visibility: visible;
-}
+
+
 
 @media (max-width: 1050px) {
   .hero {
@@ -2031,14 +1902,8 @@ h1 {
     grid-column: auto;
   }
 
-  .process-layout {
-    grid-template-columns: 1fr;
-    gap: 42px;
-  }
 
-  .process-intro {
-    position: static;
-  }
+
 
   .closing-actions {
     flex-direction: row;
@@ -2175,7 +2040,6 @@ h1 {
   .section-head h2,
   .prep-copy h2,
   .owner-copy h2,
-  .process-intro h2,
   .area-card h2,
   .faq-intro h2 {
     font-size: clamp(2.45rem, 12vw, 3.75rem);
@@ -2247,46 +2111,14 @@ h1 {
     width: 135px;
   }
 
-  .process-section {
-    padding-block: 72px 76px;
-  }
 
-  .process-intro .section-kicker {
-    margin-bottom: 10px;
-  }
-
-  .process-intro h2 {
-    margin-bottom: 18px;
-  }
 
   .area-section {
     padding-top: 64px;
   }
 
-  .process-layout {
-    gap: 34px;
-  }
 
-  .process-track {
-    grid-template-columns: 42px 1fr;
-    gap: 12px;
-  }
 
-  .process-rail::before {
-    left: 20px;
-  }
-
-  .process-roller {
-    left: 0;
-    transform: scale(0.82);
-    transform-origin: left top;
-  }
-
-  .process-step {
-    grid-template-columns: 42px 1fr;
-    gap: 12px;
-    min-height: 175px;
-  }
 
   .faq-list details > p {
     padding-right: 8px;
@@ -2375,13 +2207,604 @@ h1 {
     translate: none;
   }
 
-  .process-step,
-  .process-step.is-active {
-    opacity: 1;
-    transform: none;
+}
+
+/* Full-page miniature world */
+
+.site-frame {
+  position: relative;
+  isolation: isolate;
+}
+
+.world-journey {
+  position: relative;
+  isolation: isolate;
+  background: var(--cream);
+}
+
+.world-stage {
+  --world-focus-x: 50%;
+  position: fixed;
+  inset: var(--header-height) 0 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--cream);
+}
+
+.world-frame-wash,
+.world-frame-grain {
+  position: absolute;
+  inset: 0;
+}
+
+.world-video-poster,
+.world-master-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--world-focus-x) center;
+  user-select: none;
+}
+
+.world-video-poster {
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 260ms ease;
+}
+
+.continuous-world-stage[data-ready="true"] .world-video-poster {
+  opacity: 0;
+}
+
+.world-master-video {
+  z-index: 1;
+  opacity: 0;
+  background: var(--cream);
+  transition: opacity 260ms ease;
+}
+
+.continuous-world-stage[data-ready="true"] .world-master-video {
+  opacity: 1;
+}
+
+.continuous-world-stage[data-motion="static"] .world-master-video {
+  display: none;
+}
+
+.world-frame-wash {
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(255, 245, 229, 0.22), transparent 42%, rgba(255, 245, 229, 0.07)),
+    linear-gradient(0deg, rgba(11, 34, 48, 0.15), transparent 28%);
+}
+
+.world-frame-grain {
+  z-index: 3;
+  opacity: 0.16;
+  background-image: radial-gradient(rgba(11, 34, 48, 0.24) 0.55px, transparent 0.7px);
+  background-size: 9px 9px;
+  mix-blend-mode: multiply;
+}
+
+
+.world-chapters,
+.world-page,
+.world-chapters .site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.world-page,
+.world-chapters .services-section,
+.world-chapters .prep-section,
+.world-chapters .projects-section,
+.world-chapters .owner-section,
+.world-chapters .area-section,
+.world-chapters .faq-section,
+.world-chapters .closing-section {
+  background: transparent;
+}
+
+.world-chapters .hero,
+.world-chapters .services-section,
+.world-chapters .prep-section,
+.world-process-beat,
+.world-chapters .owner-section,
+.world-chapters .area-section,
+.world-chapters .faq-section,
+.world-chapters .closing-section {
+  min-height: calc(115svh - var(--header-height));
+}
+
+.world-chapters .hero {
+  display: grid;
+  grid-template-columns: minmax(0, 690px) 1fr;
+  align-items: center;
+  gap: 0;
+  min-height: calc(100svh - var(--header-height));
+  padding-block: clamp(48px, 7vw, 90px);
+}
+
+.world-chapters .hero-copy {
+  width: min(100%, 690px);
+  padding: clamp(28px, 4vw, 48px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 28px;
+  background: rgba(255, 251, 244, 0.94);
+  box-shadow: 9px 11px 0 rgba(11, 34, 48, 0.82);
+}
+
+.world-chapters .hero-copy h1 {
+  font-size: clamp(3.1rem, 5.5vw, 5.45rem);
+}
+
+.world-chapters .service-ticker {
+  position: relative;
+  z-index: 2;
+  width: min(calc(100% - 40px), var(--shell));
+  margin: -22px auto 0;
+  overflow: hidden;
+  border: 2px solid var(--navy-deep);
+  border-radius: 15px;
+  box-shadow: 5px 6px 0 rgba(11, 34, 48, 0.78);
+  transform: rotate(-0.35deg);
+}
+
+.world-chapters .services-section {
+  display: grid;
+  align-items: center;
+  padding-block: clamp(110px, 14vw, 190px);
+  overflow: visible;
+  color: var(--navy-deep);
+}
+
+.world-chapters .services-section::before,
+.world-chapters .prep-section::after {
+  display: none;
+}
+
+.world-chapters .services-section .section-head {
+  width: min(100%, 790px);
+  margin-right: 0;
+  margin-left: auto;
+  padding: clamp(26px, 4vw, 44px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 25px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 7px 8px 0 rgba(11, 34, 48, 0.78);
+}
+
+.world-chapters .services-section .light-head .section-kicker {
+  color: var(--coral-ink);
+}
+
+.world-chapters .services-section .light-head > p,
+.world-chapters .services-section .inline-cta p {
+  color: rgba(11, 34, 48, 0.76);
+}
+
+.world-chapters .services-section .inline-cta strong {
+  color: var(--navy-deep);
+}
+
+.world-chapters .services-section .service-grid {
+  margin-top: clamp(42px, 6vw, 72px);
+}
+
+.world-chapters .services-section .inline-cta {
+  width: min(100%, 790px);
+  margin-right: 0;
+  margin-left: auto;
+  border: 2px solid var(--navy-deep);
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 5px 6px 0 rgba(11, 34, 48, 0.7);
+}
+
+.world-chapters .services-section .inline-cta .text-button {
+  color: var(--coral-ink);
+}
+
+.world-chapters .prep-section {
+  display: grid;
+  align-items: center;
+  padding-block: clamp(110px, 14vw, 190px);
+  overflow: visible;
+  border: 0;
+}
+
+.world-chapters .prep-layout {
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 0.74fr);
+  gap: clamp(42px, 7vw, 96px);
+}
+
+.world-chapters .prep-copy {
+  grid-column: 1;
+  grid-row: 1;
+  padding: clamp(28px, 4.5vw, 50px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 26px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 8px 9px 0 rgba(11, 34, 48, 0.78);
+}
+
+.world-chapters .prep-photo {
+  grid-column: 2;
+  grid-row: 1;
+  height: min(560px, 64vw);
+  min-height: 460px;
+}
+
+.world-process-section {
+  position: relative;
+}
+
+.world-process-beat {
+  display: flex;
+  align-items: center;
+  padding-block: clamp(110px, 14vw, 190px);
+}
+
+.world-copy-panel {
+  width: min(100%, 590px);
+  padding: clamp(28px, 4.5vw, 52px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 27px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 8px 9px 0 rgba(11, 34, 48, 0.8);
+  color: var(--navy-deep);
+}
+
+.world-copy-panel h2 {
+  margin: 0 0 24px;
+  font-size: clamp(3rem, 5.7vw, 5.8rem);
+  font-weight: 950;
+  letter-spacing: -0.068em;
+}
+
+.world-copy-panel > p:not(.section-kicker) {
+  color: rgba(11, 34, 48, 0.77);
+  font-size: 1.04rem;
+}
+
+.world-copy-panel .text-button {
+  color: var(--coral-ink);
+}
+
+.world-copy-panel > small {
+  display: block;
+  margin-top: 15px;
+  color: rgba(11, 34, 48, 0.62);
+  font-weight: 750;
+}
+
+.world-process-list {
+  display: grid;
+  gap: 0;
+  padding: 0;
+  margin: 28px 0 0;
+  list-style: none;
+}
+
+.world-process-list li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1.5px solid rgba(11, 34, 48, 0.22);
+  font-family: var(--display-font);
+  font-weight: 900;
+}
+
+.world-process-list span {
+  color: var(--coral-ink);
+  font-family: var(--body-font);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+}
+
+.world-chapters .projects-section {
+  min-height: 180svh;
+  padding-block: clamp(130px, 17vw, 230px);
+}
+
+.world-chapters .projects-section .section-head {
+  width: min(100%, 820px);
+  padding: clamp(26px, 4vw, 44px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 25px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 7px 8px 0 rgba(11, 34, 48, 0.78);
+}
+
+.world-chapters .project-grid {
+  margin-top: clamp(58px, 8vw, 100px);
+}
+
+.world-chapters .project-source {
+  padding-inline: 11px;
+  border: 1.5px solid rgba(11, 34, 48, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 251, 244, 0.92);
+}
+
+.world-chapters .owner-section,
+.world-chapters .area-section,
+.world-chapters .faq-section,
+.world-chapters .closing-section {
+  display: flex;
+  align-items: center;
+  padding-block: clamp(110px, 14vw, 190px);
+}
+
+.world-chapters .owner-card {
+  width: min(100%, 790px);
+  margin-right: 0;
+  margin-left: auto;
+  grid-template-columns: 135px minmax(0, 1fr);
+  gap: 34px;
+  padding: clamp(34px, 5vw, 58px);
+  background: rgba(255, 251, 244, 0.95);
+}
+
+.world-chapters .owner-badge {
+  width: 132px;
+}
+
+.world-chapters .owner-side-note {
+  grid-column: 2;
+  text-align: left;
+}
+
+.world-chapters .area-section {
+  padding-top: clamp(110px, 14vw, 190px);
+}
+
+.world-chapters .area-card {
+  width: min(100%, 830px);
+  grid-template-columns: minmax(0, 1.08fr) minmax(250px, 0.7fr);
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 8px 9px 0 rgba(11, 34, 48, 0.72);
+}
+
+.world-chapters .faq-section {
+  width: min(100% - 40px, var(--shell));
+}
+
+.world-chapters .faq-panel {
+  display: grid;
+  width: min(100%, 980px);
+  grid-template-columns: minmax(230px, 0.64fr) minmax(0, 1.36fr);
+  gap: clamp(56px, 9vw, 130px);
+  padding: clamp(32px, 5vw, 58px);
+  border: 2px solid var(--navy-deep);
+  border-radius: 28px;
+  background: rgba(255, 251, 244, 0.95);
+  box-shadow: 8px 9px 0 rgba(11, 34, 48, 0.76);
+}
+
+.world-chapters .closing-card {
+  width: min(100%, 980px);
+  background: rgba(11, 34, 48, 0.96);
+}
+
+.world-chapters .site-footer {
+  width: min(100% - 40px, var(--shell));
+  margin-inline: auto;
+  padding: 28px 30px 36px;
+  border: 2px solid var(--navy-deep);
+  border-bottom: 0;
+  border-radius: 24px 24px 0 0;
+  background: rgba(255, 251, 244, 0.94);
+}
+
+@media (max-width: 1050px) {
+  .world-chapters .hero {
+    grid-template-columns: minmax(0, 650px) 1fr;
   }
 
-  .process-roller {
+  .world-chapters .owner-card {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+
+  .world-chapters .owner-badge {
+    width: 118px;
+  }
+}
+
+@media (max-width: 900px) {
+  .world-frame-wash {
+    background:
+      linear-gradient(0deg, rgba(255, 245, 229, 0.56), transparent 54%),
+      linear-gradient(90deg, rgba(255, 245, 229, 0.12), rgba(255, 245, 229, 0.02));
+  }
+
+  .world-chapters .hero,
+  .world-chapters .services-section,
+  .world-chapters .prep-section,
+  .world-process-beat,
+  .world-chapters .owner-section,
+  .world-chapters .area-section,
+  .world-chapters .faq-section,
+  .world-chapters .closing-section {
+    min-height: 125svh;
+  }
+
+  .world-chapters .hero {
+    grid-template-columns: 1fr;
+    align-items: end;
+    padding-block: 38svh 10svh;
+  }
+
+  .world-chapters .hero-copy {
+    width: min(100%, 680px);
+  }
+
+  .world-chapters .service-ticker {
+    width: min(calc(100% - 30px), var(--shell));
+    margin-top: -18px;
+  }
+
+  .world-chapters .services-section,
+  .world-chapters .prep-section,
+  .world-process-beat,
+  .world-chapters .projects-section,
+  .world-chapters .owner-section,
+  .world-chapters .area-section,
+  .world-chapters .faq-section,
+  .world-chapters .closing-section {
+    align-items: end;
+    padding-block: 42svh 11svh;
+  }
+
+  .world-chapters .services-section .section-head,
+  .world-chapters .services-section .inline-cta,
+  .world-chapters .projects-section .section-head,
+  .world-chapters .owner-card,
+  .world-chapters .area-card {
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .world-chapters .services-section .section-head,
+  .world-chapters .projects-section .section-head,
+  .world-chapters .area-card,
+  .world-chapters .faq-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .world-chapters .services-section .service-grid {
+    margin-top: 34px;
+  }
+
+  .world-chapters .prep-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .world-chapters .prep-copy,
+  .world-chapters .prep-photo {
+    grid-column: 1;
+  }
+
+  .world-chapters .prep-copy {
+    grid-row: 1;
+  }
+
+  .world-chapters .prep-photo {
+    grid-row: 2;
+    width: min(100% - 30px, 520px);
+    height: auto;
+    min-height: 0;
+    margin-top: 54px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .world-chapters .projects-section {
+    min-height: 0;
+  }
+
+  .world-chapters .owner-card {
+    grid-template-columns: 115px minmax(0, 1fr);
+  }
+
+  .world-chapters .owner-side-note {
+    grid-column: 2;
+  }
+
+  .world-chapters .faq-panel {
+    width: min(100%, 760px);
+    gap: 42px;
+    padding: 34px;
+  }
+
+  .world-chapters .closing-section {
+    display: flex;
+  }
+}
+
+@media (max-width: 580px) {
+  .world-chapters .hero {
+    padding-block: 32svh 9svh;
+  }
+
+  .world-chapters .hero-copy,
+  .world-copy-panel,
+  .world-chapters .services-section .section-head,
+  .world-chapters .services-section .inline-cta,
+  .world-chapters .projects-section .section-head {
+    padding: 27px 22px;
+    border-radius: 21px;
+    box-shadow: 6px 7px 0 rgba(11, 34, 48, 0.76);
+  }
+
+  .world-chapters .hero-copy h1 {
+    font-size: clamp(2.75rem, 13.5vw, 4.25rem);
+  }
+
+  .world-chapters .services-section,
+  .world-chapters .prep-section,
+  .world-process-beat,
+  .world-chapters .projects-section,
+  .world-chapters .owner-section,
+  .world-chapters .area-section,
+  .world-chapters .faq-section,
+  .world-chapters .closing-section {
+    padding-block: 36svh 10svh;
+  }
+
+  .world-copy-panel h2 {
+    font-size: clamp(2.75rem, 13vw, 4.35rem);
+  }
+
+  .world-chapters .owner-card {
+    grid-template-columns: 1fr;
+  }
+
+  .world-chapters .owner-badge {
+    width: 128px;
+  }
+
+  .world-chapters .owner-side-note {
+    grid-column: 1;
+  }
+
+  .world-chapters .faq-panel {
+    width: min(100%, 760px);
+    padding: 28px 22px;
+  }
+
+  .world-chapters .site-footer {
+    width: min(100% - 24px, var(--shell));
+    padding: 26px 22px 112px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-video-poster,
+  .world-master-video {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .world-stage {
     display: none;
+  }
+
+  .world-journey,
+  .world-chapters .hero-copy,
+  .world-copy-panel,
+  .world-chapters .services-section .section-head,
+  .world-chapters .services-section .inline-cta,
+  .world-chapters .projects-section .section-head,
+  .world-chapters .owner-card,
+  .world-chapters .area-card,
+  .world-chapters .faq-panel,
+  .world-chapters .site-footer {
+    background: Canvas;
+    color: CanvasText;
   }
 }
