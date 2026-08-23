@@ -82,6 +82,7 @@ The cue fractions intentionally match the edited film: arrival `0/9`, services `
 - `.panel-coral`, `.panel-mint`, `.panel-butter`, `.panel-paper` and `.panel-dark` provide semantic material accents without turning every card into a competing solid color.
 - `.chapter-number`, `.service-slip`, `.proof-snapshot` and `.proof-card` carry the workshop-label and real-job-proof vocabulary through the page.
 - Desktop layout uses the copy-safe directions in the storyboard. The 1050px, 900px and 580px adaptations collapse panels and grids while leaving the portrait film visible above the content.
+- The opening hero is bound to the visible viewport after navigation. Its spacing and typography respond to viewport height as well as width; short screens remove decorative proof labels and the handwritten note before they can push the primary message or action below the fold.
 - Static-video fallback increases panel opacity for legibility. Reduced-motion and forced-colors rules preserve content and interaction without depending on animation, blur, color, or shadow.
 - The overlay adds no JavaScript animation library or runtime package. Motion remains limited to the native video scrub, small compositor-friendly reveal transitions, and direct interaction feedback.
 

@@ -280,6 +280,15 @@ test("keeps the full-page world, proof, motion safety, and contact path intact",
     assert.ok(worldUiCss.includes(`.${panelClass}`), `${panelClass} should remain part of the overlay system`);
   }
   assert.ok(worldUiCss.includes(".continuous-world-stage[data-motion=\"static\"] + .world-chapters .world-panel"));
+  assert.ok(worldUiCss.includes("--hero-pad-start:"));
+  assert.ok(worldUiCss.includes("min-height: calc(100svh - var(--header-height));"));
+  assert.ok(worldUiCss.includes("@media (max-height: 760px)"));
+  assert.ok(worldUiCss.includes("@media (max-height: 680px)"));
+  assert.ok(worldUiCss.includes("@media (orientation: landscape) and (max-height: 420px)"));
+  assert.doesNotMatch(
+    worldUiCss,
+    /\.world-chapters \.hero\s*\{[^}]*padding-block:\s*(?:37|41)svh/s,
+  );
   assert.ok(worldUiCss.includes("@media (max-width: 900px)"));
   assert.ok(worldUiCss.includes("@media (prefers-reduced-motion: reduce)"));
   assert.ok(worldUiCss.includes("@media (forced-colors: active)"));
